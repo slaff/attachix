@@ -1,0 +1,1 @@
+C({"plugin": "view", "name": "jQuery.View.Helpers.prototype.undefined.views", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": " Includes views into the production file.  This is highly encouraged as the files are preprocessed\n and don't rely on eval.\n \n", "tags": undefined})

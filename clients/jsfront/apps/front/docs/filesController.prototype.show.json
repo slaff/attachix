@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.prototype.show", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "files"}], "comment": "Shows a files's information.\n     \n", "tags": undefined})

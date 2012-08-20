@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Controller.Action.EnterLeave.static.mousemove", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n         ", "type": "Object", "optional": false, "order": 0, "name": "event"}], "comment": "Updates the current_position of the mosuemove.\n", "tags": undefined})

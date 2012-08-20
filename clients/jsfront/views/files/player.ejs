@@ -1,0 +1,26 @@
+<div class="player">
+    <div class="player-toolbar">
+        <a href="" class="action-hide">Hide</a>
+        <a href="" class="action-close">Close</a>
+    </div>
+    <div class="player-panel">
+        <object type="application/x-shockwave-flash" data="/~static/flash/flowplayer.swf" width="480" height="386" id="flash-player">
+            <param name="allowScriptAccess" value="sameDomain" />
+            <param name="allowFullScreen" value="true" />
+            <param name="movie" value="/~static/flash/flowplayer.swf" />
+            <param name="quality" value="high" />
+            <param name="scale" value="scale" />
+            <param name="wmode" value="transparent" />
+            <param name="flashvars" id="flashvars" value="config={
+                   allowFullScreen: true,
+                   audioPlay:false,
+                   loop:false,
+                   autoBuffering:false,
+                   initialScale: 'scale',
+                   videoFile: '<%= file %>',
+                   width: 480,
+                   height: 386,
+                   }" />
+        </object>
+    </div>
+</div>

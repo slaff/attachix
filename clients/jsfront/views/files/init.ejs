@@ -1,0 +1,32 @@
+<table class="nav" width="100%" cellpadding="0" cellspacing="0">
+<tbody>
+    <tr>
+        <td><a href="#files/" class="on">Files</a></td>
+        <td><a href="#filter:IMAGES">Images</a></td>
+        <td><a href="#filter:MUSIC">Music</a></td>
+        <td><a href="#filter:VIDEO">Video</a></td>
+    </tr>
+</tbody>
+</table>
+<%= view('views/files/breadcrumb',{currentPath: currentPath}) %>
+
+<div id="files-list" class="focus">
+<form class="filter" method="get" action="#">
+    Sort by
+    <select name="section" class="files_selector">
+	<option value="{DAV:}displayname" <%= params['sortBy']=='{DAV:}dipslayname'?'selected':'' %>>Name</option>
+        <option value="{DAV:}getcontenttype" <%= params['sortBy']=='{DAV:}getcontenttype'?'selected':'' %>>File type</option>
+        <option value="{DAV:}getcontentlength" <%= params['sortBy']=='{DAV:}getcontentlength'?'selected':'' %>>Size</option>
+        <option value="{DAV:}getlastmodified" <%= params['sortBy']=='{DAV:}getlastmodified'?'selected':'' %>>Last modified</option>
+    </select> 
+    <select name="order" class="files_order">
+        <option value="asc" <%= params['order']=='asc'?'selected':'' %>>Asc</option>
+        <option value="desc" <%= params['order']=='desc'?'selected':'' %>>Desc</option>
+    </select>
+</form>
+
+<%= view('views/files/toolbar') %>
+<ul class="entries tile">
+</ul>
+</div>
+<div id="files-content" class="blur"></div>

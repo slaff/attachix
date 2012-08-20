@@ -1,0 +1,31 @@
+<%
+    var link = href
+    file['{DAV:}resourcetype'] = parseInt(file['{DAV:}resourcetype'])
+    if (baseURL != '/') {
+        link = baseURL + link
+    }
+    
+    if(!file['{DAV:}displayname']) {
+        file['{DAV:}displayname'] = basename(href)
+    }
+
+    var relation = "";
+    if (file['{DAV:}getcontenttype'] == 'application/pdf') {
+        relation = 'pdf';
+    }
+    else if (file['{DAV:}getcontenttype'].indexOf('text/') == 0 ||
+             file['{DAV:}getcontenttype'] == 'application/x-empty' ||
+             file['{DAV:}getcontenttype'] == 'application/xml'
+    ) {
+        relation = 'text';
+    }
+%>
+<%= view('views/files/thumbnail', {'baseURL': baseURL, 'file': file, 'href': href}) %>
+<a <%= (relation?'rel="'+relation+'"':'') %>  mime="<%= file['{DAV:}getcontenttype'] %>" title="<%= file['{DAV:}displayname'] %>" <%= file['{DAV:}resourcetype']?'':'target="_blank"' %> href="<%= link %>" class="truncate <%= file['{DAV:}resourcetype']?'folder':'file' %>">
+<%= file['{DAV:}displayname'] %>
+</a>
+<% if(!file['{DAV:}resourcetype']) { %>
+<br>
+[<%= bytesConvert(file['{DAV:}getcontentlength']) %>]
+<% } %>
+<input type="checkbox" name="<%= link %>" class="file-checkbox" id="chk-<%= pathToId(href) %>">

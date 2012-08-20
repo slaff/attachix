@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.event", "html": " ", "className": "function", "ret": {"description": "the adjusted event name.\n     ", "type": "String"}, "params": [], "comment": "returns the event that should actually be used.  In practice, this is just used to switch focus/blur\n to activate/deactivate for ie.\n", "tags": undefined})

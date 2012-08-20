@@ -1,0 +1,1 @@
+include.functionalTests('truth_functional');

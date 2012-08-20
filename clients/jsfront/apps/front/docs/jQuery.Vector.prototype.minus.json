@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Vector.prototype.minus", "html": " ", "className": "function", "ret": {"description": "\n     ", "type": "jQuery.Vector"}, "params": [], "comment": "Like plus but subtracts 2 vectors\n", "tags": undefined})

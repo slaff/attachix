@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Flash Player</title>
+    <script type="text/javascript" src="/~static/js/jquery.js"></script>
+    <style type="text/css">
+        html,body{background:#111}
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('.loading').html('')
+        })
+    </script>
+</head>
+<body>
+<span class="loading" style="color:white; font-weight:bold">Loading...</span>
+<div class="audio">
+    <div class="audioPanel">
+        <object type="application/x-shockwave-flash" data="/~static/flash/flowplayer.swf" width="280" height="25" id="FlowPlayerBlack">
+            <param name="allowScriptAccess" value="sameDomain" />
+            <param name="movie" value="/~static/flash/flowplayer.swf" />
+            <param name="quality" value="high" />
+            <param name="scale" value="scale" />
+            <param name="wmode" value="transparent" />
+            <param name="flashvars" id="flashvars" value="config={
+                   audioPlay:false,
+                   loop:false,
+                   menuItems: [false, false, false, false, false, false, false],
+                   autoBuffering:false,
+                   ControlBarGloss:'low',
+                   showStopButton: false,
+                   showScrubber: true,
+                   showVolumeSlider: true,
+                   showMuteVolumeButton: false,
+                   showFullScreenButton: false,
+                   showMenu: false,
+                   usePlayOverlay: false,
+                   initialScale: 'scale',
+                   videoFile: '#file#'
+                   }" />
+        </object>
+    </div>
+</div>
+<script language="JavaScript"><!--
+    var queryString = window.location.search.substring(1)
+    var data = queryString.split(':')
+    var config = $('#flashvars').attr('value')
+    config = config.replace(/#file#/m,data[0])
+    $('#flashvars').attr('value', config)
+//--></script>
+</body>
+</html>

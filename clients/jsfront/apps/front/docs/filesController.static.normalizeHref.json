@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.static.normalizeHref", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Normalizes the href so that the JavaScript links work\n with baseURL \n         \n", "tags": undefined})

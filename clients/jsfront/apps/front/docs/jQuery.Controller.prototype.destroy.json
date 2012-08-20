@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Controller.prototype.destroy", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Removes all actions on this instance.\n     \n", "tags": undefined})

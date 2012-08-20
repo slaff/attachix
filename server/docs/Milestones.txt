@@ -1,0 +1,30 @@
+== Milestone  0 ==
+- Announcement and source code repository on github
+    What Attachix can do for you or your business.
+
+- Uses existing non-proprietary protocols
+    - can start using most of the features by using the existing OS applications
+- Has web interface
+    - magic links
+
+== Milestone  1 ==
+- Quick start
+    What Attachix can do for you or your business.
+    Advanced:
+        Developers -
+            python 
+            single threaded - light, must not have blocking code, must not keep state in the long living objects,
+            gevent based
+- Exposing local directory as a WebDAV resource
+    Talking about virtual hosts, resources, storage providers
+    Advanced:
+            Creating your own resource
+- Holding extra properties for the resources
+    Redis as a properties providers.
+- Protecting the resources
+    Talking about authentication, BasicAuth, DigestAuth, authentication backends, user providers
+    Advanced:
+            Creating your own authentication mechanism
+- Notifying on changes
+    Notification on methods
+    Advanced: Get notified on your iOS phone when a file a file is uploaded

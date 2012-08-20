@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "exports.stopEvent", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "e"}], "comment": "Prevents propagation and clobbers the default action of the passed event\n\n", "tags": undefined})

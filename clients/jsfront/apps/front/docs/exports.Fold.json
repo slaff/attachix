@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "exports.Fold", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "range"}, {"description": "", "type": "", "optional": false, "order": 1, "name": "placeholder"}], "comment": "Simple fold-data struct.\n \n", "tags": undefined})

@@ -1,0 +1,40 @@
+<form class="accept" method="post">
+<input type="hidden" name="token" class="required" value="<%= escapeHTML(token) %>"/>
+<input type="hidden" name="auth" class="required" value="<%= escapeHTML(auth) %>"/>
+ <fieldset>
+   <legend>Registration Form</legend>
+   <p>
+     <label>Username</label>
+     <span class="notice">Your username is the <span class="bold">email</span> where you received the invitation.</span>
+   </p>
+   <p>
+     <label>Your Name/Nick</label>
+     <input type="text" name="name" size="50" maxlength="255" class="required" />
+   </p>
+   <p>
+     <label>Password</label>
+     <input type="password" id="password" name="password" size="50" class="required password" title="The password is required and it must be strong"/>
+     <div class="password-meter">
+        <div class="password-meter-message"></div>
+        <div class="password-meter-bg">
+            <div class="password-meter-bar"></div>
+        </div>
+      </div>
+   </p>
+   <p>
+     <label>Retype password</label>
+     <input type="password" size="50" name="repass" class="required equalTo '#password'" title="Enter the same password again"/>
+   </p>
+   <p>
+     <label>Terms and Conditions</label>
+     <textarea>The terms and conditions are ...</textarea>
+   </p>
+   <p>
+     <label>Agree</label>
+     <input type="checkbox" name="agree" value="1" class="required" />
+   </p>
+   <p>
+     <input type="submit" value="Accept"/>
+   </p>
+ </fieldset>
+ </form>

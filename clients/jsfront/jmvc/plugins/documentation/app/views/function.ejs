@@ -1,0 +1,24 @@
+<%= view("jmvc/plugins/documentation/app/views/top",this)%>
+ <div class='comment'><%= link(this.comment)%></div>
+ <pre class='signiture'><code><%= signiture()%></code></pre>
+  
+  <div class='params'>
+  
+  
+  <% var ordered = this.params
+  	for(var n = 0; n < ordered.length; n++){   
+       var param = ordered[n]; %>  
+      <div class='param <%= param.optional ? "optional" : ""%>'>
+          <label><%= param.name%></label>
+          <code>{<%=(param.optional ? '' : '') +""+(param.type) %>}</code> - <%= (param.description) %>
+      </div>
+ <% } %>
+
+ <% if(this.ret.type != "undefined") {%>
+     <div class='return'>
+         <label>returns</label> 
+         <code>{<%=(this.ret.type)%>}</code> - <%= (this.ret.description)%>
+     </div>
+ <% } %>   
+ 
+ </div>

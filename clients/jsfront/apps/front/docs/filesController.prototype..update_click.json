@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.prototype.&#46;update click", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "el"}], "comment": "Updates the files from the edit values.\n     \n", "tags": undefined})

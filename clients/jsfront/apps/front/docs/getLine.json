@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getLine", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "row"}], "comment": "Get a verbatim copy of the given line as it is in the document\n     \n", "tags": undefined})

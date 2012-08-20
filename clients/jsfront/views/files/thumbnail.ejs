@@ -1,0 +1,68 @@
+<%
+if(!file['{DAV:}getcontenttype']) {
+   file['{DAV:}getcontenttype'] = 'application/octet-stream';
+}
+mime = file['{DAV:}getcontenttype'].split('/')
+
+// if there is preview image -> show it
+previewImage = ''
+linkURL      = href
+title        = file['{DAV:}displayname']
+description  = ''
+relation     = ''
+
+if(file['{system:}image-thumbnail-small']) {
+    imageURL = file['{system:}image-thumbnail-small']
+    if(imageURL == '') {
+        previewImage = '/.views/'+ href+'/image-thumbnail-200x.png'
+    }
+    else {
+        previewImage = imageURL
+    }
+}
+
+if (mime[0] == 'image' && previewImage) {
+    if (file['{system:}image-thumbnail-large']) {
+        linkURL = file['{system:}image-thumbnail-large']
+        relation     = 'image'
+    }
+}
+else if (mime[0] == 'video' && previewImage) {
+    if (file['{system:}video-convert-large']) {
+        linkURL = file['{system:}video-convert-large']
+        relation     = 'video'
+    }
+}
+else if (mime[0] == 'audio') {
+    if (file['{system:}audio-thumbnail-mp3']) {
+        linkURL = '/.views/'+ href+'/audio.mp3'
+        relation     = 'audio'
+    }
+
+    if(file['{system:}audio-artist'] || file['{system:}audio-title']) {
+        description = file['{system:}audio-title'] + "("+file['{system:}audio-artist']+")"
+    }
+}
+
+if(description) {
+%>
+<%= description %>
+<%
+}
+
+
+
+if(previewImage) {
+    if (baseURL != '/') {
+        if (previewImage[0] == '/') {
+            previewImage = baseURL + previewImage;
+        }
+        if (linkURL[0] == '/') {
+            linkURL = baseURL+linkURL;
+        }
+    }
+%>
+<a href="<%= linkURL %>" rel="<%= relation %>" title="<%= escape(title) %>"><img src="<%= previewImage %>" class="image-thumbnail-200x left"/></a>
+<%
+}
+%>

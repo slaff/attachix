@@ -1,0 +1,57 @@
+<div class="toolbar">
+<dl>
+    <dt><a href="">New File</a></dt>
+    <dd>
+        <form class="put">
+            Name: <input type="text" name="name">
+            <input type="submit" value=" Create ">
+        </form>
+    </dd>
+
+    <dt><a href="">New Folder</a></dt>
+    <dd>
+        <form class="mkcol">
+            Name: <input type="text" name="name">
+            <input type="submit" value=" Create ">
+        </form>
+    </dd>
+
+    <dt><a href="">Share</a></dt>
+    <dd>
+        <form class="share">
+            To Email: <input type="text" name="to_email">
+            <input type="submit" value=" Send ">
+        </form>
+    </dd>
+
+    <dt><a href="">Upload</a></dt>
+    <dd>
+        If you have Firefox >= 3.5 or Chrome >= 9 then
+        drag your files from the file manager and drop them
+        directly into the web browser.
+        <form method="POST" class="upload" target="uploadFrame" enctype="multipart/form-data" action="?rt=json">
+            <input type="hidden" name="{hidden:}source" value="web">
+            Files: <input type="file" multiple="true" name="files[]">
+            <input type="text" name="кирилица" value="">
+            <input class="upload" type="submit" value=" Send ">
+        </form>
+        <iframe name="uploadFrame" style="display:none"></iframe>
+    </dd>
+
+    <dt><a href="">Rename</a></dt>
+    <dd>
+        <form class="rename">
+            New File or Folder Name: <input type="text" name="name" class="input-rename">
+            <input type="submit" value=" Rename ">
+        </form>
+    </dd>
+
+    <dt><a href="">Delete</a></dt>
+    <dd>
+        If you want to delete the selected entries in this folder then press the button
+        <form class="delete">
+            <input type="submit" value=" Delete ">
+        </form>
+    </dd>
+</ul>
+</div>

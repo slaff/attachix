@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "_readTagForward", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "iterator"}], "comment": "reads a full tag and places the iterator after the tag\n     \n", "tags": undefined})

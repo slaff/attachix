@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Model.static.wrap", "html": " ", "className": "function", "ret": {"description": "an instance of the model\n     ", "type": "Model"}, "params": [{"description": "", "type": "Object", "optional": false, "order": 0, "name": "attributes"}], "comment": "Used to create an existing object from attributes\n", "tags": undefined})

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Model.prototype.invalidAttributes", "html": " ", "className": "function", "ret": {"description": "List of attributes.\n    ", "type": "Array"}, "params": [], "comment": "Returns a list of attributes that failed validation.  See [validation] for more on validations.\n", "tags": undefined})

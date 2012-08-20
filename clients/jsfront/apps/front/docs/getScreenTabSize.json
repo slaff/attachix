@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getScreenTabSize", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "screenColumn"}], "comment": "Returns the width of a tab character at screenColumn.\n     \n", "tags": undefined})

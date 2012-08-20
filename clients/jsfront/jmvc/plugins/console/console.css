@@ -1,0 +1,113 @@
+* {
+  margin: 0px;padding: 0px;font-family: verdana;
+}
+
+body {font: normal 10pt verdana; margin: 0px; padding: 0px;
+
+				/*overflow: hidden;*/
+
+}
+.ui-tabs {
+  padding: 0px;
+}
+
+
+h1{
+	font-size: 12pt;background:#D5E7B3;
+	margin: 0px;
+	padding: 3px 5px 5px 5px;
+}
+#reload {
+	float:right;
+	padding:3px;
+}
+
+#types {
+	padding-top: 1px;
+	margin:0px;
+	line-height: 30px;
+	position: relative;background:#D5E7B3;
+}
+#types[id]{
+	line-height: 24px;
+}
+
+h2 { 
+	text-decoration: none; 
+	border-top: solid 1px #8FBA3C;
+	padding: 3px 20px 4px 20px;
+	border-left: solid 1px #8FBA3C;
+	color: blue; cursor: pointer;
+	display: inline;
+	font-size: 14pt;
+}
+h2 span {
+	font-size: 10px; 
+}
+#functional_button {
+	border-right: solid 1px #8FBA3C;
+}
+#console_button {
+	
+}
+#console_log {
+	overflow: auto;
+}
+#console {}
+
+h2.selected { 
+	color: black;
+	background-color: white;
+}
+h3 { margin: 0px; font-weight: normal;padding: 3px 3px 0px 2px;  }
+h3 img {margin: 0px; padding: 0px 5px 0px 0px;}
+#types[id] h2 {
+	padding: 2px 20px 4px;
+}
+#types[id] h2 span{
+	vertical-align:top;
+}		
+.run {font-size: 12pt; font-weight: normal;}
+table {width: 100%; text-align: left; margin-top: 5px;}
+.test {margin: 0px 10px 5px 10px; border: solid 1px #e0e0e0; padding-bottom: 3px;}
+
+.min {float: right;padding:0px;}
+
+
+th { color: gray;padding-left: 2px;}
+td {border-top: solid 1px #eeeeee}
+.helpers {font-size: 10px; background-color: #eeeeee; margin: 3px 3px 0px  23px;}
+img {cursor: pointer}
+.passed {background-color: #D5E7B3;}
+.failure {background-color: #EEAAAA;}
+.running {background-color: yellow}
+.result {font-size: 10pt;}
+a {color: blue;text-decoration: none;}
+a:hover {text-decoration: underline;}
+
+.table_container {margin-left: 23px; margin-right: 3px;}
+
+.explanation p {font-weight:normal;background-color:white;}
+.explanation h3 {font-weight:bold;margin-left:10px;padding:0px;}
+code { 
+	border: solid 1px #D5E7B3; 
+	margin: 10px 40px 10px 40px; 
+	padding: 10px; background-color: #eeeeee;
+	display: block;
+	white-space: pre;
+}
+
+.highlight { background-color:#FFFFCC; }
+.key {color: #800080; }
+.attribute, .data {color: red;}
+
+.play {
+  padding: 13px;
+}
+
+.console_controller, pre {
+  font-family: "Lucida Console"
+}
+.scroller {
+    overflow: auto;
+}

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.computeOrder", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": " returns and caches the select order for the css patern.\n @retun {Array} array of objects that are used to match with the node_path\n     \n", "tags": undefined})

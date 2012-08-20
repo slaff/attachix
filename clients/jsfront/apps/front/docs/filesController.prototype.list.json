@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.prototype.list", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "An array of files objects.\n     ", "type": "Array", "optional": false, "order": 0, "name": "files"}], "comment": "Displays a list of files and the submit form.\n", "tags": undefined})

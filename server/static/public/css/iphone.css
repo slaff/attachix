@@ -1,0 +1,160 @@
+/* Economedia 2010 */
+
+body { margin: 0px; padding: 0px; background-color: #fff; font-family: Arial, Verdana, Helvetica, sans-serif; -webkit-text-size-adjust: none; }
+
+.L { float: left; }
+.R { float: right; }
+
+.clear { clear: both; display: block; }
+
+a img, img { border: none; }
+
+form { padding: 0; margin: 0; }
+
+.header { background: #c00024; overflow: hidden; padding: 5px 10px; }
+.header h1 { width: 129px; height: 30px; float: left; background: transparent url("/i/uragan/img/dnevnik-phone.png") no-repeat 0 0; margin: 0; }
+.header h1 a { width: 129px; height: 30px; display: block; float: left; text-indent: -9999px; }
+.header .search { color: #FFF; line-height: 30px; font-size: 80%; float: right; }
+.header .search a { color: #FFF;}
+.header .search a:hover { text-decoration: none;}
+
+.nav { padding: 0; margin: 0; background: #FFF; width: 100%; border-bottom: 1px solid #CCC; }
+.nav td { background: transparent url("/i/uragan/img/line.png") no-repeat center right; }
+.nav td.issue { background: none; }
+.nav a { display: block; text-decoration: none; margin: 1px 2px 1px 1px; padding: 8px 5px; text-align: center; color: #333; font-size: 80%; font-family: Georgia, "Times New Roman", Times, Serif; text-transform: uppercase; }
+.nav a.on { background: #F0F0F0; color: #CC3333; font-weight: bold; }
+.nav td.last { background: none; }
+.nav td.last a { margin: 1px; }
+
+/* Folder Navigation */
+.navigation { padding: 8px 0 8px 10px; font-size: 80%; background: #F0F0F0; color: #CC3333; font-weight: bold;}
+
+.filter { background: #F3F3F3; overflow: hidden; padding: 10px; border-bottom: 1px solid #CCC; }
+.filter select { width: 100%; font-size: 90%; }
+.filter span { color: #333; font-size: 70%; padding-top: 5px; display: block; }
+.filter .search { display: block; overflow: hidden; }
+.filter .search input { width: 55%; font-size: 80%; border: 1px solid #333; padding: 5px; font-weight: bold; color: #000; }
+.filter .search .button { background: #00CFFF url("/i/mobi/more.png") repeat-x bottom left; margin: 0; border-left: 1px solid #49E0ff; border-top: 1px solid #49E0ff; border-right: 1px solid #0C778D; border-bottom: 1px solid #0C778D; padding: 5px 10px; font-size: 70%; text-decoration: none; color: #FFF; width: 100px;}
+.filter .search .button:hover { background: #00B0D9; }
+
+.rubr { border-bottom: 1px solid #454b8c; padding: 5px; }
+.rubr form { padding: 0; margin: 0; }
+.rubr #rubrsel { font-size: 16px; width: 100%; }
+
+body ul { clear: both; margin: 0; padding: 0; }
+body ul > li { position: relative; margin:0; list-style: none; clear:both; }
+body ul > li > a { display: block; text-decoration: none; color: inherit; }
+body ul > li > a > img { float:left; margin-right: 10px; width: 50px; border: 0px solid white; }
+
+ul.content > li { border-bottom: 1px solid #CCC; background-color: #FFF; padding: 8px 0 8px 10px; }
+ul.content > li > a { font-family: Georgia, "Times New Roman", Times, Serif; color: #003366; font-size: 16px; font-weight: normal; margin: -8px 0 -8px -10px; padding: 8px 32px 8px 10px; background: url(/i/listArrow.png) no-repeat right center; }
+ul.content > li > a > span { font-size: 11px; }
+ul.content > li > a > sup { vertical-align: bottom; font-size: 12px; color: #666; font-weight: normal; font-family: Arial, Verdana, Helvetica, sans-serif; }
+ul.content > li > a > sup { display: block; }
+
+ul.content > li > a:after {	content: "."; display: block; height: 0; font-size: 0; clear: both; visibility: hidden; }
+ul.content > li > a[selected], ul.content > li > a:active { background-color:#194fdb !important; background-repeat: no-repeat, repeat-x; background-position: right center, left top; color:#fff !important; }
+
+#footer { color: #666; background-color: #d9d9d8; font-size: 10px; text-align: center; padding: 5px; margin-top: 0px; clear: both; }
+#footer a { color: #333; display: block; margin: 0 0 5px 0; font-size: 12px; }
+#footer a.backTop { font-weight: bold; }
+
+.gut { background: #202020; padding: 5px; overflow: hidden; text-align: center; font-size: 70%; text-align: center; display: block; }
+.gut a { color: #999; text-decoration: underline; padding: 5px; float: left; }
+.gut a:hover { color: #FFF; text-decoration: none; }
+
+.showArrow > li > a.folder { background-image: url(/~static/img/m/arrow.png); background-repeat: no-repeat; background-position: right; }
+
+.mobiArticleHolder {display: block; overflow: hidden; padding: 10px;}
+
+.article { padding-bottom: 10px; }
+.article h1 { font-size: 22px; font-weight: bold; color: #000; padding: 0; margin: 0; }
+.article h2 { font-size: 90%; font-weight: bold; padding: 5px 0; margin: 0; }
+.article h3 { font-size: 80%; font-weight: normal; padding: 5px 0; margin: 0; }
+.article .autors { margin: 0; color: #505050; }
+.article .date { display: block; vertical-align: bottom; font-size:80%; color:#666; }
+.article .date:first-letter { text-transform: uppercase; }
+.article .who { color: #888; font-size: 75%; font-weight: bold; }
+.article .autors b { font-weight: normal; }
+
+.curr { background: #F5F5F5 url(http://pazari.dnevnik.bg/im/curr.gif) no-repeat scroll 9px; padding: 8px 0 8px 28px; text-align: left; }
+
+.table { border-collapse: collapse; }
+.table td { border-bottom: 1px solid #F6F6F6; padding: 5px; }
+
+.photoall { text-align: center; margin: 5px; }
+
+#gallnav > a > img { border: 1px solid silver; margin: 0px 5px 5px 0; width: 50px; height: 50px; }
+
+.multimedia { text-align: center; margin: 3px; }
+
+.iCompany { width: 96%; float: left; padding: 3% 2%; clear: both; border-bottom: 1px solid #cecece; }
+.iCompany:nth-child(odd) { background-color: #FFF; } 
+.iCompany:nth-child(even) { background-color: #EEE; }
+
+.iCompany a { color: #69d; text-decoration: none; }
+
+#iCompAll a { color: #69d; width: 96%; float: left; font-size: 80%; font-weight: bold; padding: 4% 2%; background: #f3f3f3; clear: both; border-bottom: 2px solid #fff; border-top: 2px solid #fff; }
+
+.searchform { padding: 10px 10px 0 10px; margin-bottom: 5px; display:block; border-bottom: 1px solid #D9D9D9; }
+
+ul.buttons { font-family: Tahoma, Arial, sans-serif; font-size: 12px; list-style-type: none; float: left; width: 100%; padding: 2px 0; background: #f0f0f0; border-bottom: 1px solid #ccc; }	
+ul.buttons li { float: left; background: transparent url(/i/uragan/img/but_gr.gif) no-repeat center right; height: 16px; margin-left: 2px; padding: 0 2px 0 0; clear: none; }
+ul.buttons li a { color: #fff; float: left; background: transparent url(/i/uragan/img/but_gl.gif) no-repeat center left; height: 14px; padding: 2px 4px 0 6px; text-decoration: none; }
+ul.buttons li.active, ul.buttons li.hover { background: transparent url(/i/uragan/img/but_rr.gif) no-repeat center right; }
+ul.buttons li.active a, ul.buttons li.hover a { color: #fff; background: transparent url(/i/uragan/img/but_rl.gif) no-repeat center left; }
+
+.navhold  { float: left; width: 100%; padding: 2px 0; background: #f0f0f0; }
+
+ul.albumNums li.nums { background: none; float: left; }
+ul.albumNums li.nums strong { font-weight: normal; padding: 3px 0 0 10px; float: left; color: #666; font-size: 12px; }
+ul.albumNumsMore { border-bottom: none;	background: none; padding: 0 0 5px 10px; float: left; width: auto; }
+
+.searchrow strong { background: #FFCC66 none repeat scroll 0 0; padding: 2px; }
+
+/* разписанието за прожекциите/представленията */
+
+.tday { clear: both; background: #f0f0f0; }
+.tday td { padding: 5px; border-bottom: 1px solid white; color: #333; font-size: 80%; }
+
+.filmsList .ttable { margin-top: 10px; }
+.ttable { list-style-type: none; float: left; }
+.ttable li { background: transparent url(/i/uragan/sled5/ttable_l.gif) no-repeat left top;  float: left; padding: 0 0 0 3px; height: 15px; width: auto; margin-top: 2px; margin-bottom: 2px; clear: none; }
+.ttable li span { background: transparent url(/i/uragan/sled5/ttable_r.gif) no-repeat right top; padding: 0 3px 0 0; height: 15px; float: left; }
+.ttable li.tlast span { background: transparent url(/i/uragan/sled5/ttable_l.gif) no-repeat right top; }
+.ttable li.past { background-color: #ccc; color: #999; }
+.ttable li.premiere { background-color: #FFCC66; }
+.ttable li.ppremiere { background-color: #CC3333; color: #FFFFFF; }
+.ttable li.current { background-color: #ffcc66; }
+.ttable li { background-color: #99ff99; }
+.ttable li span em { display: block; padding: 3px; font-style: normal; font-size: 9px; line-height: 8px; }
+.ttable li span em i { font-weight: bold; font-style: normal; color: #CC3333; }
+.ttable li span em b { color: #000000; }
+
+.ttlegend { float: right; font-family: Tahoma,Arial,sans-serif; margin-top: 2px; }
+
+.ttprograma { border: 1px solid #f0f0f0; float: left; width: 618px; }
+.ttprograma h4 { background: #f0f0f0; padding: 10px; font-family: Georgia,Times New Roman,serif; font-size: 18px; font-weight: normal; color: #333; }
+.ttprograma h3 { padding: 10px; font-family: Georgia,Times New Roman,serif; font-size: 14px; }
+
+.legend { background: #F0F0F0 none repeat 0 0; color:#333333; font-family: Georgia, "Times New Roman", serif; font-size: 18px; font-weight: normal; padding: 10px; }
+
+.pagetop { line-height: 0; padding: 1px 0 0 0; margin: 0; font-size: 0; background: #255caa; }
+
+.searchLnk { padding: 0px 10px;  font-size: 12px;  color: #FFF; }
+.searchLnk:hover { text-decoration: none; }
+
+
+.articleComnts { display: block; margin: 0 -10px 10px -10px; clear: both; overflow: hidden; font-size: 70%; border-bottom: 1px solid #CCC; }
+.articleComnts a { padding: 10px; background: #F0F0F0; color: #333; float: left; margin-left: 10px; border: 1px solid #F0F0F0;}
+.articleComnts a:hover { color: #0066CC; }
+.articleComnts .commentsTab { font-weight: bold; padding: 10px; background: #FFF; color: #333; float: left; margin-left: 10px; border: 1px solid #CCC; border-bottom: 1px solid #FFF; }
+
+.userComment { overflow: hidden; padding: 10px; border-top: 1px solid #CCC; margin: 0 -10px; }
+.userComment em { font-style: normal; font-family: Georgia, "Times New Roman", Times, Serif; color: #999; font-size: 120%; }
+.userComment strong { color: #333; font-size: 90%;  }
+.userComment span { display: block; clear: both; color: #999; font-size: 70%; padding-bottom: 5px; }
+.userComment p { padding: 0; margin: 0; font-size: 90%; }
+
+.cmntFoot { border-top: 1px solid #CCC; border-bottom: none; }
+.cmntFoot .commentsTab { border-top: none; border-bottom: 1px solid #CCC; }

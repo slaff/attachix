@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getRowLength", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "row"}], "comment": "Returns the number of rows required to render this row on the screen\n     \n", "tags": undefined})

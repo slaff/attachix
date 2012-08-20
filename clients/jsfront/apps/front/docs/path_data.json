@@ -1,0 +1,1 @@
+C({"plugin": "'dom/history'", "name": "path_data", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Provides current window.location parameters as object properties.\n    \n", "tags": undefined})

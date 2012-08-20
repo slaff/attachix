@@ -1,0 +1,12 @@
+SeleniumDefaults = {
+    serverHost: "localhost",
+    serverPort : 4444,
+    browserURL : "<%= current_path%>/<%= application_name %>.html#jmvc[selenium]=true&jmvc[env]=test"
+}
+
+SeleniumBrowsers = [
+<% if(windows){ %>
+    "*iexplore",
+<% } %>
+    "<%= firefox_location %>"
+]

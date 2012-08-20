@@ -1,0 +1,1 @@
+C({"plugin": "lang/inflector", "name": "jQuery.Native.String.static.isSingular", "html": " ", "className": "function", "ret": {"description": "\n   ", "type": "Boolean"}, "params": [{"description": "", "type": "String", "optional": false, "order": 0, "name": "string"}], "comment": "Returns if the string is singular\n", "tags": undefined})

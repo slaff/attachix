@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": ".fn.enable", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "b"}], "comment": "Enables or disables any matching elements.\n \n", "tags": undefined})

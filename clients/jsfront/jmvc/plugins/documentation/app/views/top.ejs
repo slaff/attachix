@@ -1,0 +1,19 @@
+<div class='top'>
+    <h1><%=name.replace(/~/g,".")%> <span class='<%= className%> type'><%= className%></span>
+        <span class="favorite favorite<%= isFavorite? 'on' : 'off'%>">&nbsp;&nbsp;&nbsp;</span></h1>
+    <% if(this.inherits){%>
+    <div class='inherits'>
+        inherits: <%= linkOpen(this.inherits) %>
+    </div>
+    <%}%>
+    <% if(this.tags){%>
+    <div class='tags'>
+        tags: <%= linkTags(this.tags) %>
+    </div>
+    <%}%>
+    <% if(this.plugin){%> 
+     <div class='plugin'>Plugin: <%= this.plugin%></div>
+     <% } %>
+    
+    
+</div>

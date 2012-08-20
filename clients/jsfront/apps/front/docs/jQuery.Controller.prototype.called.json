@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Controller.prototype.called", "className": "attribute", "comment": " String name of current function being called on controller instance.  This is \n used for picking the right view in render.\n         \n"})

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.change_for_webkit", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": " Handles a change event for Safari.\n     \n", "tags": undefined})

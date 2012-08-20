@@ -1,0 +1,15 @@
+include.plugins('view','lang/class','lang/json');
+include(
+    'application',
+    'pair',
+    'directives',
+    'function',
+    'class',
+    'constructor',
+    'file',
+    'add',
+    'static',
+    'prototype',
+    'attribute',
+    'page'
+)

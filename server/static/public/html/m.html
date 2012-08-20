@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+        <meta name="format-detection" content="telephone=no">
+        <title>Mobile Moore</title>
+        <link rel="stylesheet" type="text/css" href="/~static/css/iphone.css">
+        <script type="text/javascript" src="/~static/js/jquery.js"></script>
+        <script type="text/javascript" src="/~static/js/jquery.history.js"></script>
+        <script type="text/javascript" src="/~static/js/jquery.endless-scroll.js"></script>
+        <script type="text/javascript" src="/~static/js/mdetect.js"></script>
+        <script type="text/javascript" src="/~static/js/models/entry.js"></script>
+        <link href="/~static/img/moore-iphone.png" rel="apple-touch-icon">
+        <script language="JavaScript">
+            /*
+             * @todo:
+             *  Move the JavaScript code to separate file
+             *  The links must be generated in a more dynamic way
+             *
+             */
+
+
+            var currentFolder = '/';
+            var remoteHost  = ''
+            var sortOrder   = 'name'
+            var uaSymbian = false
+            var rowsPerScreen = 15
+            var maxPage       = 0
+            var resetScrollCounter = false;
+            var sortBy        = '{DAV:}getcontenttype'
+            var order         = 'asc'
+
+            function bytesConvert(bytes) {
+                var ext = new Array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+                var unitCount = 0;
+                for(; bytes > 1024; unitCount++) bytes /= 1024;
+                return Math.round(bytes,2) + " " + ext[unitCount];
+            }
+            
+            function setCurrentFolder(folder) {
+                resetScrollCounter = true;
+                maxPage       = 0;
+                currentFolder = folder;
+                
+                var paths = currentFolder.split('/');
+                var html  = ""
+                var last = paths.length-1
+                fullPath = ''
+                for(index in paths) {
+                    var path = paths[index];
+                    if (index == last) {
+                        html+= path;
+                        break;
+                    }
+
+                    fullPath += path + '/'
+                    if(path == '') {
+                        path = 'Home'
+                    }
+                    html+='<a href="#folder:'+fullPath+'" '
+                        + (uaSymbian? 'onClick="changeCurrentFolder(\''+fullPath+'\'); return false" ':'')
+                        + '>'+path+'</a> &gt; '
+                }
+                $('.navigation').html(html)
+            }
+
+            function loadCurrentFolder(params, append) {
+                params = params || {};
+
+                if(!params['_limit']) {
+                    params['_limit'] = '0,'+rowsPerScreen
+                }
+
+                Entry.load(remoteHost+currentFolder, params, function(files) {
+                    var html = ''
+                    offset   = 0
+                    if(params['_limit']) {
+                        parts = params['_limit'].split(',')
+                        offset = parseInt(parts[0])
+                    }
+                    
+                    for (href in files) {                        
+                        if (href == currentFolder) {
+                            // change the navigation to point to the correct place
+                            continue;
+                        }
+
+                        name = files[href]['{DAV:}displayname'];
+
+                        icon = ''
+                        if (files[href]['{DAV:}getcontenttype']) {
+                            mime = files[href]['{DAV:}getcontenttype'].split('/')
+                            switch(mime[0].toLowerCase()) {
+                                case 'video':
+                                    icon = '<a href="#" onClick="window.open(\'/~static/html/player.html?/.views/'+href+'/flash.flv:/.views/'+href+'/image.png\'); return false"><img src="/.views/'+href+'/image.png" width="50"></a>'
+                                    break;
+                                case 'image':
+                                    icon = '<a href="#" onClick="window.open(\'/~static/html/gallery.html?'+Entry.dirname(href)+'\'); return false"><img src="/.views/'+href+'/image.png" width="50" /></a>'
+                                    break;
+                                case 'audio':
+                                    icon = '<a href="#" onClick="window.open(\'/~static/html/aplayer.html?/.views/'+href+'/song.mp3:/.views/'+href+'/image.png\'); return false"><img src="/~static/img/audio.png" width="50"/></a>'
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                        html += '<li pos="'+offset+'">'+icon
+                        if(files[href]['{DAV:}resourcetype']) {
+                            html += '<a href="#folder:'+href+'"'
+                                + (uaSymbian? ' onClick="changeCurrentFolder(\''+href+'\'); return false" ':'')
+                                +' class="folder">'+name+'/</a> '
+                        }
+                        else {                            
+                            html += '<a href="'+remoteHost+href+'" target="_blank" '
+                                 + '>'+name+'</a> ['+ bytesConvert(files[href]['{DAV:}getcontentlength'])+']'
+                        }
+                        html += '</li>'
+                        offset++;
+                    }
+
+                    if(append) {
+                        if (html!='') {
+                            maxPage++;
+                        }
+                        $('.content').append(html)
+                    }
+                    else {
+                        $('.content').html(html)
+                    }
+                });
+            }
+
+            function changeCurrentFolder(folder) {
+                setCurrentFolder(folder)
+
+                var params = {};
+                params['_sort'] = sortBy+','+order;
+                loadCurrentFolder(params)
+            }
+
+            function toggleSearchForm(){
+                $('.searchform').toggle();
+                return false;
+            }
+
+            function changePage(hash) {
+                // do stuff that loads page content based on hash variable
+                pos = hash.indexOf(':')
+                action = hash.substr(0, pos)
+                argument = hash.substr(pos+1)
+
+                switch(action) {
+                    case 'folder':
+                        changeCurrentFolder(argument)
+                        break;
+                }
+            }
+            
+            $(document).ready(function() {
+                uaSymbian = DetectSymbianOS();
+
+                if(uaSymbian) {
+                    changeCurrentFolder(currentFolder)
+                }
+                else {
+                    if(location.hash=='') {
+                        changeCurrentFolder(currentFolder)
+                    }
+
+                    $.history.init(changePage);
+                }
+
+                $('#selector').change(function() {
+                   sortBy = $(this).val();
+                   changeCurrentFolder(currentFolder)
+                });
+
+                $('#order').change(function() {
+                   order = $(this).val();
+                   changeCurrentFolder(currentFolder)
+                });
+
+
+                $('.content').endlessScroll({
+                    fireOnce: false,
+                    fireDelay: false,
+                    resetCounter: function(){
+                        var reset = resetScrollCounter
+                        resetScrollCounter = false;
+                        return reset;
+                    },
+                    callback: function(page){
+                        if(page <= maxPage+1) {
+                            var offset = rowsPerScreen * page + 1
+
+                            var lastLoaded = $('.content > li:last').attr('pos')
+                            if(offset > parseInt(lastLoaded)) {
+                                var params = { '_limit': offset+','+rowsPerScreen };
+                                loadCurrentFolder(params, true)
+                            }
+                        }
+                    }
+                });
+            })
+        </script>
+    </head>
+    <body>
+        <div class="header" id="top">
+            <h1><a href="#top" title="Top"></a></h1>
+            <span class="search">
+                <a href="#login">Login</a>
+                | <a href="#action:search" onClick="javascript:toggleSearchForm()">Search</a>
+            </span>
+            <span class="clear"></span>
+        </div>
+
+        <noscript>
+            <p>This page requires JavaScript support.</p>
+        </noscript>
+        <div class="outer">            
+            <table class="nav" width="100%" cellpadding="0" cellspacing="0">
+                <tbody><tr>
+                        <td><a href="#filter:" class="on">Files</a></td>
+                        <td><a href="#filter:IMAGES">Images</a></td>
+                        <td><a href="#filter:MUSIC">Music</a></td>
+                        <td><a href="#filter:VIDEO">Video</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="navigation"></div>
+
+            <form class="filter" method="get" action="#">
+                Sort by
+                <select name="section" id="selector">
+                    <option value="{DAV:}getcontenttype">File type</option>
+                    <option value="{DAV:}displayname">Name</option>
+                    <option value="{DAV:}getcontentlength">Size</option>
+                    <option value="{DAV:}getlastmodified">Last modified</option>
+                </select>
+                <select name="order" id="order">
+                    <option value="asc">Asc</option>
+                    <option value="desc">Desc</option>
+                </select>
+            </form>
+
+            <div class="searchform" style="display:none">
+                <form id="fsearch" name="search" method="SEARCH" action="/" enctype="multipart/form-data">
+                    <input type="text" id="key" value="" name="key"/>
+                    <input type="submit" value="Search" />
+                </form>
+            </div>
+
+            <div class="main">
+                <ul class="content showArrow">
+                    <li>
+                        Loading ...
+                    </li>
+                </ul>
+            </div>
+
+            <div id="footer">
+                <a href="#top" class="backTop">Top</a>                
+                ©2010 Moore.IO. All rights reserved
+            </div>
+        </div>
+        <div class="gut">
+            <a href="https://moore.io">Moore.IO</a>
+            <div style="clear: both;"></div>
+        </div>
+    </body>
+</html>

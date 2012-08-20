@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Model.static._parseDate", "html": " ", "className": "function", "ret": {"description": "a date\n\t ", "type": "Date"}, "params": [{"description": "a string representation of a date", "type": "String", "optional": false, "order": 0, "name": "str"}], "comment": "Turns a string into a date\n", "tags": undefined})

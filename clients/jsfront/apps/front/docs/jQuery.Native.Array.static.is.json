@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Native.Array.static.is", "html": " ", "className": "function", "ret": {"description": "\n     ", "type": "Boolean"}, "params": [{"description": "a possible array object", "type": "Object", "optional": false, "order": 0, "name": "array"}], "comment": "Returns if the object is an array\n", "tags": undefined})

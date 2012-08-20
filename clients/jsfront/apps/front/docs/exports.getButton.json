@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "exports.getButton", "html": " ", "className": "function", "ret": {"description": "0 for left button, 1 for middle button, 2 for right button\n ", "type": "Number"}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "e"}], "comment": "", "tags": undefined})

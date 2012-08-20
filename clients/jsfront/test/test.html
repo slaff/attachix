@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Mobile Moore</title>
+    <link rel="stylesheet" type="text/css" href="css/mobile.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.validate.password.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.colorbox.css" />
+</head>
+<body>
+    <form>
+        <input type="file" name="file"/>
+    </form>
+
+    <script type='text/javascript' src='/~js/jmvc/include.js?front,development'></script>
+    <script src="/~js/flash/swfupload.js"></script>
+    <script src="/~js/flash/jquery-asyncUpload-0.1.js"></script>
+    
+<style>
+    div.ProgressBar { width: 100px; padding: 0; border: 1px solid black; margin-right: 1em; height:.75em; margin-left:1em; display:-moz-inline-stack; display:inline-block; zoom:1; *display:inline; }
+    div.ProgressBar div { background-color: Green; font-size: 1pt; height:100%; float:left; }
+    span.asyncUploader object { position: relative; top: 5px; left: 10px; }
+
+</style>
+
+    <script>
+    $(document).ready(function() {
+        $("input[type=file]").makeAsyncUploader({
+            upload_url: "/", // Important! This isn't a directory, it's a HANDLER such as an ASP.NET MVC action method, or a PHP file, or a Classic ASP file, or an ASP.NET .ASHX handler. The handler should save the file to disk (or database).
+            flash_url: '/~js/flash/swfupload.swf',
+            button_image_url: '/~js/flash/blankButton.png'
+        });
+    });
+</script>
+
+</body>
+</html>

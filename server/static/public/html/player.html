@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Flash Player</title>
+    <script type="text/javascript" src="/~static/js/jquery.js"></script>
+    <script type="text/javascript" src="/~static/js/flashembed.min.js"></script>
+	<style type="text/css">
+        html,body{background:#111}
+	</style>
+    <script>
+        $(document).ready(function() {
+           $('.loading').html('')
+        })
+    </script>
+</head>
+<body>
+<script language="JavaScript"><!-- 
+    var queryString = window.location.search.substring(1)
+    var data = queryString.split(':')
+
+    flashembed("videoplayer",
+    {
+        src:'/~static/flash/flowplayer.swf',
+        width: 480,
+        height: 386,
+        wmode: 'transparent',
+        allowScriptAccess: 'sameDomain'
+    },
+    {config: {
+        autoPlay: true,
+        loop: false,
+        autoBuffering: true,
+        controlBarBackgroundColor:'0x000000',
+        initialScale: 'scale',
+        videoFile: data[0]
+    }});
+//--></script>
+<div id='videoplayer'></div>
+<span class="loading" style="color:white; font-weight:bold">Loading...</span>
+</body>
+</html>

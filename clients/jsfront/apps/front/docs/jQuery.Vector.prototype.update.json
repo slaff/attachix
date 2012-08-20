@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Vector.prototype.update", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n     ", "type": "Object", "optional": false, "order": 0, "name": "array"}], "comment": "Replaces the vectors contents\n", "tags": undefined})

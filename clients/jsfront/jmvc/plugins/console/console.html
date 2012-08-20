@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>JavaScriptMVC Console</title>
+		<link type="text/css" href="http://jqueryui.com/latest/themes/base/ui.all.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="console.css"/>
+
+	</head>
+	<body scroll='no'>
+		<div id='console'>
+			
+		</div>
+        <script type='text/javascript'>
+            logger =  function(text){
+                jQuery('#console_log').append(text+"<br/>");
+            }
+        </script>
+        
+		<script src='../../include.js' type='text/javascript'></script>
+		<script type='text/javascript'>
+			try{
+                opener.jQuery
+            }catch(e){
+                alert("Can't access opener.  Likely you are using Firefox and it is blocking.")
+                throw "Can't access opener"
+            }
+            include.isConsole = true;
+            include.plugins('test','controller','view','console/app');
+            //get start file and grab functional tests
+            
+            include( window.location.hash.substring(1)+"/test/functional.js");
+
+            //need to get application include of previous
+			include.start()
+		</script>
+	</body>
+</html>

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "inviteController.prototype.&#46;cancel click", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "The invite's cancel link element.\n     ", "type": "jQuery", "optional": false, "order": 0, "name": "el"}], "comment": "Removes the edit interface.\n", "tags": undefined})

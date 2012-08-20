@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "exports.getOS", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Return an exports.OS constant\n \n", "tags": undefined})

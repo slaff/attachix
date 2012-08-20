@@ -1,0 +1,15 @@
+//load('jmvc/rhino/command/file.js')
+//load('jmvc/rhino/command/recursive_http_fetcher.js');
+
+
+load('jmvc/rhino/loader.js')
+rhinoLoader(function(){
+  include.plugins('util/recursive_http_fetcher');
+});
+
+
+var fetcher = new RecursiveHTTPFetcher("http://javascriptmvc.googlecode.com/svn/branches/2_0/jmvc", -1, "jmvc")
+fetcher.quiet = false
+print("  Fetching ...");
+fetcher.fetch();
+print("  JavaScriptMVC 2.0 updated!");

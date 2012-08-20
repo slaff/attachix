@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getDocumentPosition", "html": " ", "className": "function", "ret": {"description": "'row' and 'column' of the document position\n     ", "type": "Object"}, "params": [], "comment": "Get the document position below the mouse cursor\n \n", "tags": undefined})

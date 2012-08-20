@@ -1,0 +1,1 @@
+C({"plugin": "'dom/history'", "name": "path", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Creates MVC.Path wrapper for current window.location\n    \n", "tags": undefined})

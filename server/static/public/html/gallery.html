@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>Picture Gallery</title>
+        <script type="text/javascript" src="/~static/js/jquery.js"></script>
+        <script type="text/javascript" src="/~static/js/mdetect.js"></script>
+        <script type="text/javascript" src="/~static/js/models/entry.js"></script>
+        <script type="text/javascript" src="/~static/js/galleria/galleria.js"></script>
+        <style>
+            html,body{background:#111}
+            #galleria{width:600px;margin:20px auto}
+        </style>
+        <script language="JavaScript">
+            
+            var currentFolder = window.location.search.substring(1)
+            var remoteHost    = ''
+
+            if (currentFolder == '') {
+                currentFolder = '/'
+            }
+
+            function loadCurrentFolder() {
+                Entry.load(remoteHost+currentFolder, {'_filter[getcontenttype]':'image/'}, function(files) {
+                    images = new Array()
+                    i=0
+                    for (href in files) {
+                        images[i]=  { 'image': '/.views/'+href+'/image-thumbnail-600x.png' };
+                        i++;
+                    }
+
+                    // run galleria and add some options
+                    $('#galleria').galleria({data_source: images});
+                });
+            }
+
+
+            $(document).ready(function(){
+                // Load theme
+                Galleria.loadTheme('/~static/js/galleria/galleria.classic.js');
+
+                // Load the entries
+                loadCurrentFolder();
+            });
+        </script>
+    </head>
+
+<body>
+    <div id="galleria">
+        Loading...
+    </div>    
+    </body>
+</html>

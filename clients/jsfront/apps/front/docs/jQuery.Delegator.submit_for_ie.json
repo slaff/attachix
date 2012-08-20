@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.submit_for_ie", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": " Handles the submit case for IE.  It checks if a keypress return happens in an\n input area or a submit button is clicked.\n     \n", "tags": undefined})

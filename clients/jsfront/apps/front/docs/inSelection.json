@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "inSelection", "html": " ", "className": "function", "ret": {"description": "whether the mouse cursor is inside of the selection\n     ", "type": "Boolean"}, "params": [], "comment": "Check if the mouse cursor is inside of the text selection\n \n", "tags": undefined})

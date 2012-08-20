@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getAllFolds", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Returns all folds in the document\n     \n", "tags": undefined})

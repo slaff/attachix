@@ -1,0 +1,72 @@
+// _args = ['thing']; load('jmvc/generate/app')
+if (!_args[0]) {
+	print("Usage: js jmvc/generate/app app_name");
+	quit();
+}
+
+load('jmvc/rhino/loader.js')
+rhinoLoader(function(){
+	include.plugins('view','util/generator');
+});
+
+(function(){ //don't have anything on window, especially with var so big_test clear works right
+
+	// if browser exists, returns the path, otherwise null
+	var get_browser_location = function(browser_name){
+		var runtime = java.lang.Runtime.getRuntime();
+		var process = runtime.exec(["sh","-c","which "+browser_name]);
+		var is = process.getInputStream();
+		var isr = new java.io.InputStreamReader(is);
+		var br = new java.io.BufferedReader(isr);
+		var line=br.readLine();
+		return line;
+	}
+    // am i non-windows?
+    var windows = true;
+    var firefox_location = "*firefox";
+	if(java.lang.System.getProperty("os.name").indexOf("Windows") == -1){
+		windows = false;
+		// does current browser config have a path?
+		var path = get_browser_location("firefox");
+		if(path) firefox_location = "*firefox "+path;
+	}
+
+	var data = {
+		class_name: _args[0], 
+		application_name: _args[0],
+		current_path: include.File.cwdURL(),
+		windows: windows,
+		firefox_location: firefox_location
+	};
+	
+	var app_root = "apps/" + data.class_name;
+	Generator.createFolder(app_root);
+	Generator.renderTo(app_root + "/init.js", "../generate/templates/application.ejs", data);
+	Generator.renderTo(app_root + "/compress.js", "../generate/templates/compress_script.ejs", data);
+	Generator.renderTo(app_root + "/index.html", "../generate/templates/compress_page.ejs", data);
+	Generator.createFolder(app_root+"/test");
+	Generator.renderTo(app_root + "/test/unit.js", "../generate/templates/unit.ejs", data);
+	Generator.renderTo(app_root + "/test/run_unit.js", "../generate/templates/unit_script.ejs", data);
+	Generator.renderTo(app_root + "/test/functional.js", "../generate/templates/functional.ejs", data);
+	Generator.renderTo(app_root + "/test/run_functional.js", "../generate/templates/run_functional.ejs", data);
+	Generator.renderTo(app_root + "/test/selenium_config.js", "../generate/templates/selenium_config.ejs", data);
+	Generator.createFolder(app_root+"/docs");
+	Generator.renderTo("test/unit/truth_test.js", "../generate/templates/unit_test.ejs", {name: "Truth"});
+	Generator.renderTo("test/functional/truth_functional_test.js", "../generate/templates/functional_test.ejs", {name: "Truth"});
+	
+	
+	
+	var dta = {
+		path_to_jmvc: "jmvc/include.js",
+		application_name: _args[0]
+	}
+	
+	//test/tests/engine.html -> ../../jmvc/include.js
+	
+	Generator.renderTo(_args[0]+".html", "../generate/templates/page.ejs", dta);
+	Generator.postGenerationMessage();
+	
+	//Generator.postGenerationMessage();
+
+})();
+

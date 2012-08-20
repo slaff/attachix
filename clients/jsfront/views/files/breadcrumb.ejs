@@ -1,0 +1,26 @@
+<div class="breadcrumb">
+<%
+var paths = currentPath.split('/');
+var navigation  = ""
+var last = paths.length-1
+var fullPath = ''
+for(index in paths) {
+    var path = decodeURI(paths[index]);
+    if (index == last) {
+          navigation+= '<span class="current">'+path+'</span>';
+          break;
+    }
+
+    fullPath += path + '/'
+    if(path == '') {
+        continue
+    }
+
+    navigation+='<a href="'+fullPath+'" class="folder truncate">'+path+'</a> <span class="delimiter">&nbsp;</span> '
+}%>
+<a href="/" class="breadcrumb-home folder">Home</a> <span class="delimiter">&nbsp;</span> <%= navigation %>
+
+
+[<a href="" class="change_view" to="list">List</a> | <a href="" class="change_view" to="tile">Tile</a>]
+<span id="loader"></span>
+</div>

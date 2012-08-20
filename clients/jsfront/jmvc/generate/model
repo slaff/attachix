@@ -1,0 +1,20 @@
+if (_args.length < 1) {
+	print("USAGE: js jmvc/generate/model ClassName Type\n")
+	print();
+	print("    Types = JsonRest")
+	print();
+	quit();
+}
+
+load('jmvc/rhino/loader.js')
+rhinoLoader(function(){
+	include.plugins('view','util/generator','lang/inflector');
+});
+
+(function(){
+	$modelName = _args[0];
+	$modelType = _args[1];
+	load("jmvc/generate/parts/convert.js")
+	load("jmvc/generate/parts/model.js")
+	Generator.postGenerationMessage();
+})();

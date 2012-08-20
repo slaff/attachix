@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "OS", "className": "attribute", "comment": "I hate doing this, but we need some way to determine if the user is on a Mac\n The reason is that users have different expectations of their key combinations.\n\n Take copy as an example, Mac people expect to use CMD or APPLE + C\n Windows folks expect to use CTRL + C\n \n"})

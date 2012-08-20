@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Native.extend", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "Object", "optional": false, "order": 0, "name": "class_name"}, {"description": "\n ", "type": "Object", "optional": false, "order": 1, "name": "source"}], "comment": "", "tags": undefined})

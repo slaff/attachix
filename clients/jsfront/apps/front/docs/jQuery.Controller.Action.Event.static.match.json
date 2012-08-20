@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Controller.Action.Event.static.match", "className": "attribute", "comment": "Matches change, click, contextmenu, dblclick, keydown, keyup, keypress, mousedown, mousemove, mouseout, mouseover, mouseup, reset, resize, scroll, select, submit, dblclick, focus, blur, load, unload\n @param {Object} action_name\n     \n"})

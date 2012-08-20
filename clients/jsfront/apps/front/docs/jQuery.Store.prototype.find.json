@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Store.prototype.find", "html": " ", "className": "function", "ret": {"description": "\n     ", "type": "Array"}, "params": [{"description": "", "type": "Function", "optional": false, "order": 0, "name": "f"}], "comment": "Finds instances using a test function.  If no test function is provided returns all instances.\n", "tags": undefined})

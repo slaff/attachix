@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.context_for_opera", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": " Handles a right click for Opera.  It looks for clicks with shiftkey pressed.\n     \n", "tags": undefined})

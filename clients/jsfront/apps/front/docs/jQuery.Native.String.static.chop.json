@@ -1,0 +1,1 @@
+C({"plugin": "view", "name": "jQuery.Native.String.static.chop", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n     ", "type": "Object", "optional": false, "order": 0, "name": "string"}], "comment": "Removes the last character from a string.\n", "tags": undefined})

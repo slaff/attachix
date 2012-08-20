@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Controller.static.register", "className": "attribute", "comment": " A mapping of event names to the Actions that handle them.  If you want to create your own actions,\n make sure they are registered here.\n\t \n"})

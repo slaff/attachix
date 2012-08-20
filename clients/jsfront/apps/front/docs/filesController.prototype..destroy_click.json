@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.prototype.&#46;destroy click", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "el"}], "comment": "Handle's clicking on a files's destroy link.\n     \n", "tags": undefined})

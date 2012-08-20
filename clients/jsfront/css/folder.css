@@ -1,0 +1,8 @@
+.playable {
+    -moz-background-clip:border;
+    -moz-background-inline-policy:continuous;
+    -moz-background-origin:padding;
+    background:transparent url(/static/img/play.png) no-repeat scroll 0 0;
+    width: 200px;
+    z-index: 12
+}

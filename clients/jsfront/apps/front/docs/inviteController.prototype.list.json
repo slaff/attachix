@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "inviteController.prototype.list", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "An array of invite objects.\n     ", "type": "Array", "optional": false, "order": 0, "name": "invites"}], "comment": "Displays a list of invites and the submit form.\n", "tags": undefined})

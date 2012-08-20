@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "exports.MouseEvent", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "domEvent"}, {"description": "", "type": "", "optional": false, "order": 1, "name": "editor"}], "comment": "Custom Ace mouse event\n \n", "tags": undefined})

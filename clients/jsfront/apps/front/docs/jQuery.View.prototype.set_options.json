@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.View.prototype.set_options", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n     ", "type": "Object", "optional": false, "order": 0, "name": "options"}], "comment": "Sets options on this view to be rendered with.\n", "tags": undefined})

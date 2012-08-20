@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getAllLines", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Returns all lines in the document as string array. Warning: The caller\n should not modify this array!\n     \n", "tags": undefined})

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "inviteController.prototype.&#46;destroy click", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "el"}], "comment": "Handle's clicking on a invite's destroy link.\n     \n", "tags": undefined})

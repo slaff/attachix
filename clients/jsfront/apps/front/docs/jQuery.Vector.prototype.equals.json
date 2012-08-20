@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Vector.prototype.equals", "html": " ", "className": "function", "ret": {"description": "\n     ", "type": "jQuery.Vector"}, "params": [], "comment": "Returns the current vector if it is equal to the vector passed in.  \n False if otherwise.\n", "tags": undefined})

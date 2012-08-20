@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Model.prototype.init", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "a hash of attributes\n     ", "type": "Object", "optional": false, "order": 0, "name": "attributes"}], "comment": "Creates, but does not save a new instance of this class\n", "tags": undefined})

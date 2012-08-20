@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getButton", "html": " ", "className": "function", "ret": {"description": "0 for left button, 1 for middle button, 2 for right button\n     ", "type": "Number"}, "params": [], "comment": "Get the clicked mouse button\n \n", "tags": undefined})

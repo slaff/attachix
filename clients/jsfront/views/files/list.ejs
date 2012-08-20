@@ -1,0 +1,19 @@
+<%
+    var decodedCurrentPath = decodeURI(currentPath)
+    for(var href in files){
+        var nHref =  href.replace(baseURI,'');
+        if (nHref == currentPath || nHref == decodedCurrentPath+'/') {
+            if (href == '/' && files[href]['{DAV:}displayname'] != '/') {
+                $('.breadcrumb-home').text(files[href]['{DAV:}displayname'])
+            }
+            continue
+        }
+
+        var file = files[href]
+%>
+<li id="<%= pathToId(nHref) %>" draggable="true" class="entry">
+    <%= view('views/files/entry', {'baseURL': baseURL, 'file': file, 'href': nHref}) %>
+</li>
+<%
+    }
+%>

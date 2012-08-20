@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "iframe", "className": "attribute", "comment": "document).ready(function() {\n   $.History.init();\n});\n\n"})

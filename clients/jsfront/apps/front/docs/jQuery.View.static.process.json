@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.View.static.process", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "_CONTEXT"}, {"description": "", "type": "", "optional": false, "order": 1, "name": "_VIEW"}], "comment": "name+'\n", "tags": undefined})

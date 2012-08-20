@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": ".fn.selected", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "select"}], "comment": "Checks/unchecks any matching checkboxes or radio buttons and\n selects/deselects and matching option elements.\n \n", "tags": undefined})

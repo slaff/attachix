@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": ".fn.resetForm", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [], "comment": "Resets the form data.  Causes all form elements to be reset to their original value.\n \n", "tags": undefined})

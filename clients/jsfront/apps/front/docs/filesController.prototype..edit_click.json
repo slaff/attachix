@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "filesController.prototype.&#46;edit click", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "The files's edit link element.\n     ", "type": "jQuery", "optional": false, "order": 0, "name": "el"}], "comment": "Creates and places the edit interface.\n", "tags": undefined})

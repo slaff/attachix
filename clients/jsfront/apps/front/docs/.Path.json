@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": ".Path", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "path"}], "comment": "class jQuery.Path\n Provides functional access to the given path (usually initialized from location.href)\n \n", "tags": undefined})

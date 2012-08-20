@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getFoldsInRange", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "range"}], "comment": "Returns all folds in the given range. Note, that this will return folds\n\n     \n", "tags": undefined})

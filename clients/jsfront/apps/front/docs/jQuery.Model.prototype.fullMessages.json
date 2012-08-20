@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Model.prototype.fullMessages", "html": " ", "className": "function", "ret": {"description": "List of error messages for all falied attributes\n    ", "type": "Array"}, "params": [], "comment": "Returns all errors messages.  See [validation] for more on validations.\n", "tags": undefined})

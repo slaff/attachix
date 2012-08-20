@@ -1,0 +1,25 @@
+<div class='test' id="<%= underscoredName%>">
+	
+
+	<h3><img alt='run' src='playwhite.png' class='test_run' /><%= className%><span class='test_results'></span></h3>
+	<div class='table_container'>
+		<table cellspacing='0px'>
+			<thead>
+				<tr>
+					<th>tests</th>
+					<th>result</th>
+				</tr>
+			</thead>
+			<tbody>
+		<% for(var i = 0; i < testNames.length; i++ ){%>
+			<tr class="step " id="step_<%= underscoredName%>_<%= testNames[i] %>" stepName="<%= testNames[i] %>">
+				<td class='name'>
+					<a href='javascript: void(0);'><%= testNames[i].substring(5) %></a>
+				</td>
+				<td class="result">&nbsp;</td>
+			</tr>
+		<%}%>
+			</tbody>
+		</table>
+	</div>
+</div>

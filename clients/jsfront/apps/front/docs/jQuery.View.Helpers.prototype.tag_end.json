@@ -1,0 +1,1 @@
+C({"plugin": "view/helpers", "name": "jQuery.View.Helpers.prototype.tag_end", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n     ", "type": "Object", "optional": false, "order": 0, "name": "tag"}], "comment": "", "tags": undefined})

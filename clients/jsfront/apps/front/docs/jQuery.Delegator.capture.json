@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Delegator.capture", "html": " ", "className": "function", "ret": {"description": "true for focus / blur, false if otherwise\n     ", "type": "Boolean"}, "params": [], "comment": "Returns if capture should be used (blur and focus)\n", "tags": undefined})

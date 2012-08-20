@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Class.static.className", "className": "attribute", "comment": " The name of the class provided for introspection purposes.\n<pre><code class='javascript'> $.Class.extend(\"MyOrg.MyClass\",{},{})\n MyOrg.MyClass.className //-> 'MyClass'\n MyOrg.MyClass.fullName //->  'MyOrg.MyClass'</code></pre>     \n"})

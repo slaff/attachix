@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "inviteController.prototype.show", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "invite"}], "comment": "Shows a invite's information.\n     \n", "tags": undefined})

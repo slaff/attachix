@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "onResize", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "", "type": "", "optional": false, "order": 0, "name": "force"}], "comment": "Triggers resize of the editor\n     \n", "tags": undefined})

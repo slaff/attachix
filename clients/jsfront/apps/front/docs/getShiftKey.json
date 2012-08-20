@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "getShiftKey", "html": " ", "className": "function", "ret": {"description": "whether the shift key was pressed when the event was emitted\n     ", "type": "Boolean"}, "params": [], "comment": "", "tags": undefined})

@@ -1,0 +1,1 @@
+C({"plugin": undefined, "name": "jQuery.Store.prototype.destroy", "html": " ", "className": "function", "ret": {"type": "undefined", "description": ""}, "params": [{"description": "\n\t ", "type": "Object", "optional": false, "order": 0, "name": "id"}], "comment": "", "tags": undefined})

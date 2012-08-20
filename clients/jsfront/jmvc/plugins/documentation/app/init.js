@@ -1,0 +1,14 @@
+include.plugins('controller','view','dom/history','dom/cookie','lang/json');
+include('documentation_controller');
+include('jsonp','highlight','languages/javascript','languages/www','search','favorites');
+include(function(){
+    include.views(
+		'documentation/app/views/attribute', 
+		'documentation/app/views/class', 
+		'documentation/app/views/constructor', 
+		'documentation/app/views/function', 
+		'documentation/app/views/top', 
+		'documentation/app/views/results', 
+		'documentation/app/views/page', 
+		'documentation/app/views/favorite')
+})
