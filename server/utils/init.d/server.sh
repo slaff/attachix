@@ -9,7 +9,7 @@
 . ./etc.conf
 
 PYTHON="python"
-BIN="vserver.py"
+BIN="server.py"
 LOG="$LOG_DIR/server.log"
 
 stop() {
