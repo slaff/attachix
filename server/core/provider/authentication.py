@@ -1,6 +1,7 @@
 """
 Authentication classes
 """
+from authentications.backend import MD5_HASH, CLEAR_TEXT, OTHER
 
 from core.provider.authentications.backend import AbstractBackend
 class AuthProvider():
@@ -153,6 +154,9 @@ class DigestAuthProvider(AuthProvider):
         Solution URL: http://code.activestate.com/recipes/302378-digest-authentication/
 
         """
+        if backend.passwordStorage not in [CLEAR_TEXT,MD5_HASH]:
+            raise Exception('The backend must implement clear text or md5 hash storage')
+
         AuthProvider.__init__(self, backend, **kwargs)
         self.realm = realm
 
@@ -216,7 +220,7 @@ class DigestAuthProvider(AuthProvider):
             #                              ":" unq(qop-value)
             #                              ":" H(A2)
             #                      ) <">
-            if self.backend.clearText:
+            if self.backend.passwordStorage == CLEAR_TEXT:
                 start = self.H(self.A1(request))
             else:
                 start = self._checksum(request)
@@ -239,7 +243,7 @@ class DigestAuthProvider(AuthProvider):
             #                              ":" unq(qop-value)
             #                              ":" H(A2)
             #                      ) <">
-            if self.backend.clearText:
+            if self.backend.passwordStorage == CLEAR_TEXT:
                 start = self.H(self.A1(request))
             else:
                 start = self._checksum(request)

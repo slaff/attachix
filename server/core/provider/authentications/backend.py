@@ -2,8 +2,12 @@
 import logging
 import os
 
+CLEAR_TEXT=1
+MD5_HASH  =2
+OTHER     =3
+
 class AbstractBackend():
-    clearText = True # specifies if the passwords are kept in clear text
+    passwordStorage = CLEAR_TEXT # specifies if the passwords are kept in clear text
 
     def passHash(self, username, password, realm):
         return password;
@@ -38,11 +42,12 @@ class AbstractBackend():
     def _get(self, key):
         raise Exception("Implement this method in the child class")
 
+
 class FileBackend(AbstractBackend):
     data = {}
     modified = None
 
-    def __init__(self, file, delimiter=':'):
+    def __init__(self, file, delimiter=":"):
         self.file = file
         self.delimiter = delimiter
         self.data = {}
@@ -66,7 +71,7 @@ class FileBackend(AbstractBackend):
             except ValueError:
                 # got invalid line
                 continue
-                
+
     def has_key(self, key):
         return self.data.has_key(key)
 
@@ -75,25 +80,13 @@ class FileBackend(AbstractBackend):
 
 import hashlib
 class Md5FileBackend(FileBackend):
-    clearText=False
+    passwordStorage=MD5_HASH
 
     """
     File Backend where the passwords are stored as MD5 hash from username, realm and password
     """
     def passHash(self, username, password, realm):
         return hashlib.md5('%s:%s:%s' % (username, realm, password)).hexdigest();
-
-import pam
-class PamBackend(AbstractBackend):
-    def check(self, username, password, realm):
-        """
-        Checks if there is a user with the specified username and password for the specified realm
-        @param string username
-        @param string password in clear text
-        @return boolean
-        """
-        return pam.authenticate(username, password)
-
 
 from core.pattern import Decorator
 import core.pool.Redis as Redis
@@ -105,6 +98,20 @@ class CacheDecorator(Decorator):
         object.__setattr__(self, "connectionWrapper", None)
         object.__setattr__(self, "prefix", prefix)
         object.__setattr__(self, "expiration", expiration)
+
+    def check(self, username, password, realm):
+        key = hashlib.md5("%s-%s-%s" % (username, password, realm)).hexdigest()
+        cacheKey = self.getCacheKey(key)
+        redis = self._getClient()
+        value = redis.get(cacheKey)
+        if value:
+            return True
+
+        value = self._obj.check(username, password, realm)
+        if value:
+            redis.set(cacheKey, value)
+            redis.expire(cacheKey, self.expiration)
+        return value
 
     def has_key(self, key):
         cacheKey = self.getCacheKey(key)
