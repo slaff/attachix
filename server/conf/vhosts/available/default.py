@@ -4,7 +4,7 @@ import core.provider.authentications.backend as authBackend
 import core.provider.locking as locking
 import core.provider.property as property
 import core.provider.storage as storage
-from core.provider.user import UserFactory
+from core.provider.users.backend import DummyBackend as DummyUser
 import core.resource.base as resource
 import core.vhost as vhost
 
@@ -18,13 +18,7 @@ class VHost(vhost.VHost):
         Init The Application
         """
         # [Set up the user provider] #
-        users = {
-            'test': {
-                'id': 'test',
-                'quota_available': 65000,
-            }
-        }
-        self.user = UserFactory(users)
+        self.user = DummyUser()
 
         # [Set up the authentication provider] #
         self.auth = auth.DigestAuthProvider(self.config['realm'],
