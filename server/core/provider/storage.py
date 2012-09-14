@@ -314,7 +314,7 @@ class CacheDecorator(Decorator):
         """
         uri = re.sub(r'/{2,}', '/', uri)
         [dir, name] = os.path.split(uri)
-        key = '%s%s%s' % (self.prefix, kwargs.get('user')['id'], dir)
+        key = '%s%s%s' % (self.prefix, kwargs.get('user').getIdentity(), dir)
         return [key, name]
 
     def __del__(self):

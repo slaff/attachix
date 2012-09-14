@@ -242,4 +242,4 @@ class RedisLockProvider(LockProvider):
         self.redis.expire(key, timeout)
 
     def getCacheKey(self, uri, **kwargs):
-        return "%s%s%s" % (self.keyPrefix, kwargs.get('user')['id'], uri)
+        return "%s%s%s" % (self.keyPrefix, kwargs.get('user').getIdentity(), uri)

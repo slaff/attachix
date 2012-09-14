@@ -44,7 +44,7 @@ class AuthProvider():
     def getUser(self, request):
         identity = self.getIdentity(request)
         if self.userProvider is None:
-            return {'id': identity}
+            return None
         return self.userProvider.find(identity)
 
     def getErrorResponse(self, request):

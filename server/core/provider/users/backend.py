@@ -1,14 +1,25 @@
 # [ User Backends ] #
 class AbstractBackend():
     identity = None
-    currentData = {}
+    
+    def find(self, identity):
+        """
+        Try to find user with the specified identity
+        @return None on failure  or object instanceof AbstractBackend
+        """
+        raise Exception("Implement this method in the child class")
 
-    def load(self):
-        pass
+    def getIdentity(self):
+        return self.identity
 
-    def get(self, identity, defaultValue):
-        obj = self()
+    def hasQuota(self, expectedSize):
+        raise Exception("Implement this method in the child class")
 
+    def changeQuota(self, bytes):
+        """
+        @param int bytes
+        """
+        raise Exception("Implement this method in the child class")
 
     def has_key(self, key):
         raise Exception("Implement this method in the child class")
@@ -19,11 +30,16 @@ class AbstractBackend():
         except ValueError:
             return defaultValue
 
+
+
     def __getitem__(self, key):
         if isinstance(key, slice):
             raise ValueError("The key cannot be slice")
 
         return self._get(key)
+
+    def __setitem__(self, key, value):
+        raise Exception("Implement this method in the child class")
 
     def _get(self, key):
         raise Exception("Implement this method in the child class")
@@ -34,27 +50,52 @@ class AbstractBackend():
     def save(self):
         raise Exception("Implement this method in the child class")
 
-    def getIdentity(self):
-        return self.backend.row
-    
-    def __getitem__(self, key):
-        return self.backend[key]
+class DummyBackend(AbstractBackend):
+
+    def find(self, identity):
+        """
+        Try to find user with the specified identity
+        @return boolean True on success or False otherwise
+        """
+        self.identity = identity
+        return self
 
     def has_key(self, key):
-        return self.backend.has_key(key)
+        return False
+
+    def get(self, key, defaultValue=None):
+        return defaultValue
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            raise ValueError("The key cannot be slice")
+
+        return self._get(key)
 
     def __setitem__(self, key, value):
-        if key == 'id':
-            raise KeyError('Changing the id of the user is not allowed')
-        self.backend[key] = value
+        return False
+
+    def _get(self, key):
+        return None
+
+    def inc(self, value):
+        return False
+
+    def save(self):
+        return False
 
     def hasQuota(self, expectedSize):
-        return self.backend['quota_available'] >= expectedSize
+        return True
 
     def changeQuota(self, bytes):
         """
         @param int bytes
         """
-        self.backend.inc('quota_available', bytes)
+        return False
+
+    
+
+
+
 
     

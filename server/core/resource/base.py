@@ -379,7 +379,7 @@ class WebdavResource(GetPostResource):
             
         size = 0
         try:
-            size = int(request.env['HTTP_CONTENT_LENGTH'])
+            size = int(request.env['CONTENT_LENGTH'])
         except:
             logging.getLogger().debug('Invalid or missing Content-Length')
             pass
@@ -476,8 +476,8 @@ class WebdavResource(GetPostResource):
         try:
             tree = ET.parse(request);
         except:
-            if request.env.has_key('HTTP_CONTENT_LENGTH') and \
-            int(request.env['HTTP_CONTENT_LENGTH']) > 0:
+            if request.env.has_key('CONTENT_LENGTH') and \
+            int(request.env['CONTENT_LENGTH']) > 0:
                 request.setResponseCode(400)
                 return
 
@@ -736,8 +736,8 @@ class WebdavResource(GetPostResource):
             request.setResponseCode(423)
             return
 
-        if request.env.has_key('HTTP_CONTENT_LENGTH') and \
-        long(request.env['HTTP_CONTENT_LENGTH'].strip()) > 0:
+        if request.env.has_key('CONTENT_LENGTH') and \
+        long(request.env['CONTENT_LENGTH'].strip()) > 0:
             return request.setResponseCode(415)
 
         try:
@@ -807,9 +807,9 @@ class WebdavResource(GetPostResource):
             tree = ET.parse(request);
             root = tree.getroot()
         except:
-            if request.env.has_key('HTTP_CONTENT_LENGTH') and \
-            int(request.env['HTTP_CONTENT_LENGTH']) > 0:
-                logging.getLogger().error('render_LOCK: Got Content-Length(%s) > 0' % request.env['HTTP_CONTENT_LENGTH'])
+            if request.env.has_key('CONTENT_LENGTH') and \
+            int(request.env['CONTENT_LENGTH']) > 0:
+                logging.getLogger().error('render_LOCK: Got Content-Length(%s) > 0' % request.env['CONTENT_LENGTH'])
                 request.setResponseCode(400)
             return
 

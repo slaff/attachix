@@ -16,11 +16,14 @@ class Resolver():
         Resolver.root = root
 
     @staticmethod
-    def getResourceForRequest(request):
+    def getResourceForRequest(request,tree=None):
         """
         Traverse resource tree to find who will handle the request.
         """
-        resource = Resolver.root
+        if tree is not None:
+            resource = tree
+        else:
+            resource = Resolver.root
         lastObjectId = "%s" % resource
         request.path = '/'
         while request.postpath and not resource.isLeaf:
@@ -39,13 +42,13 @@ class Resolver():
         return resource
         
     @staticmethod
-    def getResourcePathForUri(uri):
+    def getResourcePathForUri(uri, tree=None):
         """
         Traverse resource tree to find who will handle the request.
         @return list - [resource, path in the resource]
         """
         request = BaseRequest(uri)
-        resource = Resolver.getResourceForRequest(request)
+        resource = Resolver.getResourceForRequest(request, tree)
         return [resource, request.path]
     
 
