@@ -211,17 +211,15 @@ class UserStorageProvider(StorageProvider):
     def __init__(self, path, propertyProvider=property.Base(), nestedLevel=0, createIfNonExistent=False):
         self.nestedLevel = nestedLevel
         self.createIfNonExistent = createIfNonExistent
+        StorageProvider.__init__(self,path,propertyProvider)
 
     def getNestedName(self, name, nestedLevel, step=2):
         if not len(name):
             raise Exception('Invalid value for parameter identity')
         folder =  ''
         max = len(name)
-        if max % 2 != 0:
-            name +="0"
-            max+=1
         for i in range(0,nestedLevel):
-            i=i*2
+            i=i*step
             if i> max-step:
                 i = max-step
             folder +='/'+name[i:i+step]
@@ -232,14 +230,15 @@ class UserStorageProvider(StorageProvider):
         """
         Translates URI to local path
         """
-        user = kwargs.get('user')
+        user = kwargs['user']
         if user.has_key('folder'):
             folder = user['folder']
         else:
-            folder =  self.path + '/' + self.getNestedName(user.getIdentity())
-            
+            folder =  self.path + '/' + \
+                      self.getNestedName(user.getIdentity(),self.nestedLevel)
+
             if self.createIfNonExistent and not os.path.exists(folder):
-                os.mkdirs(folder)
+                os.makedirs(folder)
 
         return folder + uri
 
