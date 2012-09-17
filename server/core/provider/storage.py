@@ -208,11 +208,40 @@ class StorageProvider():
 
 class UserStorageProvider(StorageProvider):
 
+    def __init__(self, path, propertyProvider=property.Base(), nestedLevel=0, createIfNonExistent=False):
+        self.nestedLevel = nestedLevel
+        self.createIfNonExistent = createIfNonExistent
+
+    def getNestedName(self, name, nestedLevel, step=2):
+        if not len(name):
+            raise Exception('Invalid value for parameter identity')
+        folder =  ''
+        max = len(name)
+        if max % 2 != 0:
+            name +="0"
+            max+=1
+        for i in range(0,nestedLevel):
+            i=i*2
+            if i> max-step:
+                i = max-step
+            folder +='/'+name[i:i+step]
+        folder +='/'+name
+        return folder
+
     def _translateUri(self, uri, **kwargs):
         """
         Translates URI to local path
         """
-        return self.path + '/' + kwargs.get('user').getIdentity() + uri
+        user = kwargs.get('user')
+        if user.has_key('folder'):
+            folder = user['folder']
+        else:
+            folder =  self.path + '/' + self.getNestedName(user.getIdentity())
+            
+            if self.createIfNonExistent and not os.path.exists(folder):
+                os.mkdirs(folder)
+
+        return folder + uri
 
 import core.pool.Redis as Redis
 import ujson as json
