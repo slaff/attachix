@@ -27,6 +27,16 @@ if not config.has_key('basePath'):
 logging.config.fileConfig(basePath+'/conf/log.cfg')
 logger = logging.getLogger()
 
+# [Config Profiling] #
+if config.get('profile')==True:
+    try:
+        # If the profiler is available on the system then enable it
+        import gevent_profiler
+        import signal
+        gevent_profiler.attach_on_signal(signum=signal.SIGUSR1, duration=120)
+    except:
+        pass
+
 # [Config the core] #
 if config.get('debug')==True:
     logger.setLevel(logging.DEBUG)

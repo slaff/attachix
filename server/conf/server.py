@@ -12,6 +12,8 @@ Config = {
     'debug': True,
     'logLevel': logging.INFO,
 
+    'profile': True, # Allow profiling 
+
     # The root directory that will contain the user data
     'dataFolder': '/',
    
