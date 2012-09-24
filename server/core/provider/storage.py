@@ -144,7 +144,7 @@ class StorageProvider():
         logging.getLogger().warn("@todo: Handle the depth value")
         shutil.move(self._translateUri(sourceUri, **kwargs), self._translateUri(targetUri, **kwargs))
 
-    def delete(self, uri):
+    def delete(self, uri, **kwargs):
         if self.isCollection(uri):
             shutil.rmtree(self._translateUri(uri, **kwargs))
         else:
