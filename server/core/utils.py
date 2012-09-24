@@ -24,15 +24,12 @@ def getMime(filename):
         return mime, encoding
     return None, None
 
-import gevent
-def parallel(function, *args, **kwargs):
-    """
-    Parallels the execution of a function without blocking the server
-    """
-    g = gevent.spawn(function, *args, **kwargs)
-    g.join()
-    return g.get()
+from gevent.hub import get_hub
+def async(func):
+    def newFunction(*args, **kwargs):
+        return get_hub().threadpool.apply(func, args, kwargs)
 
+    return newFunction
 
 from gevent import socket
 import errno
