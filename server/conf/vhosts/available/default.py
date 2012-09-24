@@ -6,6 +6,7 @@ import core.provider.property as property
 import core.provider.storage as storage
 from core.provider.users.backend import DummyBackend as DummyUser
 import core.resource.base as resource
+import core.resource.mvc as mvcResource
 import core.vhost as vhost
 
 class VHost(vhost.VHost):
@@ -71,5 +72,10 @@ class VHost(vhost.VHost):
         # and the static files
         root.putChild('~static', resource.StaticResource(storage.StorageProvider(self.config['basePath']+'/static/public'), expirationDays = 2))
         root.putChild('~js', resource.StaticResource(storage.StorageProvider('../clients/jsfront/'), expirationDays=2))
+
+        root.putChild('-rest', mvcResource.RestResource(
+                                'core/resource/controller/',
+                                auth=self.auth
+                              ))
 
         self.root = root

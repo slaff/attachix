@@ -63,9 +63,6 @@ class DummyBackend(AbstractBackend):
     def has_key(self, key):
         return False
 
-    def get(self, key, defaultValue=None):
-        return defaultValue
-
     def __getitem__(self, key):
         if isinstance(key, slice):
             raise ValueError("The key cannot be slice")
@@ -76,7 +73,9 @@ class DummyBackend(AbstractBackend):
         return False
 
     def _get(self, key):
-        return None
+        if key=='id':
+            return self.identity
+        raise KeyError('No such key')
 
     def inc(self, value):
         return False

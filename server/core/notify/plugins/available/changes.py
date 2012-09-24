@@ -32,15 +32,18 @@ class Plugin(base.Plugin):
         if request.method == 'DELETE':
             type = 'remove'
 
-        uri = request.uri.replace(request.baseUri,'')
+        baseUri = ''
+        if request.env.has_key('BASE_URI'):
+            baseUri = request.env['BASE_URI']
+        uri = request.uri.replace(baseUri,'')
 
         if request.method == 'POST':
             commonString = utils.longestCommonSubstring(uri, path)
             uri += path.replace(commonString,'')
         elif request.method in ['COPY','MOVE']:
             uri = urlparse.urlparse(request.env['HTTP_DESTINATION'])[2]
-            uri = uri.replace(request.baseUri,'')
-            baseUri = request.uri.replace(request.baseUri,'').replace(path,'')
+            uri = uri.replace(baseUri,'')
+            baseUri = request.uri.replace(baseUri,'').replace(path,'')
             if baseUri:
                 path = uri.replace(baseUri,'/')
             else:
