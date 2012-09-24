@@ -12,7 +12,16 @@ Config = {
     'debug': True,
     'logLevel': logging.INFO,
 
-    'profile': True, # Allow profiling 
+    'profile' : {
+        # Allow profiling
+        'enabled': True,
+        'statsOutput': '/tmp/profiler-stats.txt',
+        'summaryOutput': None,
+        'traceOutput': None,
+        'countTimeBlocking': True,
+        'printPercentage': True,
+        'duration': 60 # Time to gather profiling information
+    },
 
     # The root directory that will contain the user data
     'dataFolder': '/',

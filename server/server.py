@@ -27,21 +27,42 @@ if not config.has_key('basePath'):
 logging.config.fileConfig(basePath+'/conf/log.cfg')
 logger = logging.getLogger()
 
-# [Config Profiling] #
-if config.get('profile')==True:
-    try:
-        # If the profiler is available on the system then enable it
-        import gevent_profiler
-        import signal
-        gevent_profiler.attach_on_signal(signum=signal.SIGUSR1, duration=120)
-    except:
-        pass
-
 # [Config the core] #
 if config.get('debug')==True:
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(config.get('logLevel', logging.INFO))
+
+# [Config Profiling] #
+if config.has_key('profile') and config['profile'].get('enabled')==True:
+    try:
+        # If the profiler is available on the system then enable it
+        import gevent_profiler
+        import signal
+
+        profile = config['profile']
+        if profile.has_key('summaryOutput'):
+            gevent_profiler.set_summary_output(profile['summaryOutput'])
+
+        if profile.has_key('statsOutput'):
+            gevent_profiler.set_stats_output(profile['statsOutput'])
+
+        if profile.has_key('traceOutput'):
+            gevent_profiler.set_trace_output(profile['traceOutput'])
+
+        if profile.has_key('printPercentage'):
+            gevent_profiler.print_percentages(profile['printPercentage'])
+
+        if profile.has_key('countTimeBlocking'):
+            gevent_profiler.time_blocking(profile['countTimeBlocking'])
+
+        gevent_profiler.attach_on_signal(signum=signal.SIGUSR1, duration=profile['duration'])
+        logger.info("The profiler is enabled and waiting on signal USR1.")
+
+    except Exception as ex:
+        print ex
+        pass
+
 
 if config.has_key('pool'):
     gevent.pool.Pool(config['pool'])
