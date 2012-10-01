@@ -3,6 +3,8 @@ Authentication classes
 """
 from authentications.backend import MD5_HASH, CLEAR_TEXT, OTHER
 
+import logging
+
 from core.provider.authentications.backend import AbstractBackend
 class AuthProvider():
     request  = None
@@ -345,3 +347,37 @@ class DigestAuthProvider(AuthProvider):
         request.env['__DIGEST_HEADERS__']['Content-Type'] = 'text/html';
 
         return [ self.code, request.env['__DIGEST_HEADERS__'], body]
+
+import core.coder as coder
+from conf.server import Config
+class TokenAuthProvider(AuthProvider):
+    def _doAuthenticate(self, request):
+        try:
+            cipher = coder.SecureLink(**Config['secret'])
+            result = cipher.decode(request.uri, ['-rest'])
+            methods = result[1]
+            identity = result[2]
+        except Exception, ex:
+            logging.getLogger().warn('Invalid authentication: %s. URL: %s' % (ex,request.uri))
+            return False
+
+        if not request.method in methods:
+            logging.getLogger().error("Method [%s] is not in methods[%s]: " % (request.method,methods))
+
+            return False
+
+        self.setIdentity(request, identity)
+        checkSum = request.postpath.pop(0)
+        request.prepath.append(checkSum)
+        request.env['auth'] = {}
+        request.env['auth']['checksum'] = checkSum
+        request.env['auth']['path']     = '/'.join(result[3].split('/')[0:result[4]])
+        if request.env['auth']['path'][0:1] != '/':
+            request.env['auth']['path'] = '/' + request.env['auth']['path']
+
+        prefixEnd = request.uri.find(request.env['auth']['path'])
+        request.baseUri = request.uri[0:prefixEnd]
+
+        #request.postpath = result[3].strip('/').split('/')
+
+        return True

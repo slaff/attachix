@@ -1319,3 +1319,182 @@ class LimitedResourceDecorator(Decorator):
             return
 
         return self._obj.render(request)
+
+class TokenResource(Resource):
+    tree  = None
+    authProvider = None
+
+    def __init__(self, tree, authProvider):
+        Resource.__init__(self)
+        self.tree  = tree
+        self.authProvider  = authProvider
+
+    def render(self, request):
+        # Nothing to be rendered here
+        # This method is needed if the authentication fails
+        return
+
+    def getChild(self, path, request):
+        #if request.method == 'OPTIONS':
+        #    return self.tree
+
+        try:
+            if request.prepath[0][0] == '~':
+                return self.tree.getChildWithDefault(path, request)
+        except IndexError:
+            pass
+
+        if not self.authProvider.authenticate(request):
+            request.postpath = []
+            return self
+        
+        if not request.env.has_key('user'):
+            # create the webdav user object
+            request.env['user'] = self.authProvider.getUser(request)
+
+        return self.tree
+
+class TokenWebdavResource(WebdavResource):
+    """
+    Resource that adds limitations based on the access token.
+    The limitations can be
+        max-file-count - total number of files in a directory
+        max-file-size - max size in bytes per file
+        max-total-size - max size of all files in a directory
+        mime-types - list of allowed mime types
+                image/ - for all images or
+                image/png for PNG images only
+        auth - dict with username:encrypted-password
+    """
+
+
+    def _loadAccessRules(self, request):
+
+        if request.env.has_key('auth') and request.env['auth'].has_key('settings'):
+            return request.env['auth']['settings']
+
+        request.env['auth']['settings'] = {}
+        """
+        public env['auth']['settings'] = { // Settings taken from a file for a shared, token protected directory.
+		'mime-types': [<allowed-mime-types>],
+		'auth': ['<one line with digest authentication>',...],
+		'max-file-size': upload limit in bytes per file
+	}
+        """
+        try:
+            stream = self.storageProvider.get("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']), user=request.env.get('user'))
+        except:
+            return {}
+
+        try:
+            request.env['auth']['settings'] = json.load(stream)
+        except:
+            logging.getLogger().error('Invalid access file')
+            return {}
+
+        logging.getLogger().debug('Loaded Axs file')
+
+        return request.env['auth']['settings']
+
+    def _checkMimeTypes(self, request, mimeType):
+        if request.env['auth']['settings'].has_key('mime-types'):
+            allowed = False
+            for allowedMime in request.env['auth']['settings']['mime-types']:
+                if mimeType.startswith(allowedMime):
+                    allowed = True
+                    break
+
+            if not allowed:
+                raise Exception('Not allowed mime type')
+
+    def _checkAuth(self, request):
+        if request.env['auth']['settings'].has_key('auth'):
+            import core.provider.authentication as auth
+            import conf.server as serverConf
+            authProvider = auth.DigestAuthProvider(
+                                        serverConf.Config['user_realm'],
+                                        request.env['auth']['settings']['auth'],
+                                        False
+                                                  )
+            if not authProvider.authenticate(request):
+                return False
+            request.env['auth']['user'] = authProvider.getIdentity(request)
+        return True
+
+
+    def _checkMaxFileSize(self, request, size):
+        if request.env['auth']['settings'].has_key('max-file-size'):
+            if size > int(request.env['auth']['settings']['max-file-size']):
+                raise Exception('File is bigger than allowed')
+
+    def _isAxs(self, request):
+        if request.path.endswith("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum'])):
+            # deny read access to the axs files
+            request.setResponseCode(403)
+            return True
+
+        return False
+
+    def render(self, request):
+        self._loadAccessRules(request)
+        return WebdavResource.render(self, request)
+
+
+    def render_GET(self, request):
+        if self._checkAuth(request):
+           return WebdavResource.render_GET(self, request)
+
+    def render_PUT(self, request):
+        """
+        Put command that is respecting the auth settings
+        """
+        if self._isAxs(request):
+            # deny write access to the axs files
+            return
+
+        if not len(request.env['auth']['settings']):
+            return WebdavResource.render_PUT(self, request)
+
+        # Pre: Make initial limitation based on the request headers
+        try:
+            self._checkMimeTypes(request, request.env['HTTP_CONTENT_TYPE'])
+            self._checkMaxFileSize(request, int(request.env['CONTENT-LENGTH']))
+        except Exception, ex:
+            logging.getLogger().error('Precondition failed: %s' % ex)
+            request.setResponseCode(412)
+            return
+
+        result = WebdavResource.render_PUT(self, request)
+
+        # Post: make checks after the file is uploaded
+        try:
+            meta = self.storageProvider.getMeta(request.path, 0, user=request.env.get('user'))
+            meta[request.path]['{DAV:}getcontentlength']
+            meta[request.path]['{DAV:}getcontenttype']
+
+        except Exception, ex:
+            logging.getLogger().error('Unable to load the newly created file')
+            return result
+
+        try:
+            self._checkMimeTypes(request, meta[request.path]['{DAV:}getcontenttype'])
+            self._checkMaxFileSize(request, int(meta[request.path]['{DAV:}getcontentlength']))
+        except Exception, ex:
+            logging.getLogger().error('Precondition failed: %s' % ex)
+            request.setResponseCode(412)
+            return
+
+        return result
+
+    def render_POST(self, request):
+        fileCount = 0
+        for (name, param) in request.params.items():
+            if hastattr(param,'filename'):
+                fileCount+=1
+                if name == ".%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']):
+                    logging.getLogger().error('Attempt to overwrite the axs file')
+                    request.setResponseCode(403)
+                    return
+                # @todo: check Mime Types + check File Size
+
+        return WebdavResource.render_POST(self, request)
