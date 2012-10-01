@@ -216,7 +216,7 @@ class GetPostResource(StaticResource):
     Class that adds also the POST method support
     """
     def render_POST(self, request):
-        if not request.env.has_key('HTTP_CONTENT_TYPE'):
+        if not request.env.has_key('CONTENT_TYPE'):
             request.setResponseCode(400)
             return
         
@@ -1457,7 +1457,7 @@ class TokenWebdavResource(WebdavResource):
 
         # Pre: Make initial limitation based on the request headers
         try:
-            self._checkMimeTypes(request, request.env['HTTP_CONTENT_TYPE'])
+            self._checkMimeTypes(request, request.env['CONTENT_TYPE'])
             self._checkMaxFileSize(request, int(request.env['CONTENT-LENGTH']))
         except Exception, ex:
             logging.getLogger().error('Precondition failed: %s' % ex)
