@@ -3,6 +3,7 @@ import hashlib
 import os.path
 import re
 import time
+import datetime
 
 from core.http import normalizeUri
 from core.coder import Secure
@@ -29,27 +30,28 @@ class User():
 
     def __init__(self, auth):
         self.auth = auth
-        self.cipher = Secure(config.Config['secret']['key'],
-                             config.Config['secret']['iv']
+        self.cipher = Secure(config.Config['share']['secret']['key'],
+                             config.Config['share']['secret']['iv']
                              )
 
     def post_Share(self, request):
         user = self.getUser(request)
+        shareConfig = config.Config['share']
         
         path = request.params['path']
         path = re.sub(r'/{2,}', '/', path)
         toEmail  = request.params['to_email']
-        days      = 30
+        expiration      = shareConfig['expiration']
         if request.params.has_key('days'):
-            days = int(request.params['days'])
+            expiration = 86400 * int(request.params['days'])
 
-        cipher = SecureLink(**config.Config['secret'])
-        tokenURL = config.Config['tokenHost'] + '/' + cipher.encode(['GET','PROPFIND','OPTIONS'],
+        cipher = SecureLink(**shareConfig['secret'])
+        tokenURL = shareConfig['host'] + '/' + cipher.encode(shareConfig['methods'],
                                                user.getIdentity(),
                                                path,
-                                               ['.views'],
+                                               shareConfig['prefixes'],
                                                255,
-                                               expiration=86400*days
+                                               expiration=expiration
                                               )
 
         
@@ -61,37 +63,28 @@ class User():
         elif len(shareName) > 30:
             shareName = shareName[0:27]+'...'
 
-        body = """
-User with email %s has shared folder "%s" with you.
-
-You can see the content in your browser by visiting:
-
-http://%s
-
-Or use the same URL in your webdav client for faster viewing and file operations.
-If you need help setting your webdav client, please visit:
-http://%s/~help/webdav/
-
-This invitation is valid in the next %d day(s)
-
-(c) 2011 Attachix 
-""" % (fromEmail, shareName, tokenURL, tokenURL, days)
+        body = shareConfig['email']['body']
+        vars = {
+            'email':fromEmail,
+            'folder': shareName,
+            'url': tokenURL,
+            'expirationDate': datetime.datetime.fromtimestamp(time.time()+expiration).strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for (key, value) in vars.items():
+            body=body.replace("#%s#" % key, value)
 
         if not email_re.match(fromEmail):
-            fromEmail = 'no-reply-shares@attachix.de'
+            fromEmail = shareConfig['email']['from']
 
         logging.getLogger().debug('post_Share: %s' % body )
 
         # send the email
         email = mail.EmailMessage(
-                    subject='Share "%s" in Attachix.de' % shareName,
+                    subject=shareConfig['email']['subject'] % shareName,
                     body=body,
                     from_email=fromEmail,
                     to=[toEmail],
-                    headers = {
-                        'Content-Type' :'text/plain; charset=utf-8',
-                        'Content-Transfer-Encoding': '8bit'
-                    }
+                    headers = shareConfig['email']['headers']
                 )
         try:
             email.send()

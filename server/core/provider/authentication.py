@@ -349,11 +349,14 @@ class DigestAuthProvider(AuthProvider):
         return [ self.code, request.env['__DIGEST_HEADERS__'], body]
 
 import core.coder as coder
-from conf.server import Config
 class TokenAuthProvider(AuthProvider):
+    def __init__(self, *args, **kwargs):
+        self.secret = kwargs.pop('secret')
+        AuthProvider.__init__(self, *args, **kwargs)
+
     def _doAuthenticate(self, request):
         try:
-            cipher = coder.SecureLink(**Config['secret'])
+            cipher = coder.SecureLink(**self.secret)
             result = cipher.decode(request.uri, ['-rest'])
             methods = result[1]
             identity = result[2]
