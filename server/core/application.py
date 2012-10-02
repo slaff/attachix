@@ -23,8 +23,8 @@ class Application():
             # get  files in the directory
             try:
                 files = os.listdir(directory)
-            except:
-                logging.getLogger().warn('Invalid VHosts Directory: %s' % directory)
+            except Exception as ex:
+                logging.getLogger().warn('Invalid VHosts Directory: %s. Error: %s' % (directory,ex))
                 continue
 
             # vhosts[ip][port][i]= vhost
@@ -59,7 +59,13 @@ class Application():
 
     @staticmethod
     def run(request):
-        hostHeader = request.env['HTTP_HOST']
+        try:
+            hostHeader = request.env['HTTP_HOST']
+        except KeyError:
+            request.setResponseCode(400)
+            request.finish()
+            return
+            
         try:
             cut = hostHeader.index(':')
             hostHeader = hostHeader[:cut]
@@ -80,8 +86,11 @@ class Application():
         if hostToUse:
             vhost = Application.lookup[hostToUse]
 
-        Resolver.setRoot(vhost.root)
-        resource = Resolver.getResourceForRequest(request)
+        resource = Resolver.getResourceForRequest(request, vhost.root)
+        request.env['VHOST'] = {
+            'root': vhost.root,
+            'host': hostToUse
+        }
         resource.render(request)
         if request.getState()!=3:
             request.finish()

@@ -5,25 +5,12 @@ Root Resource and Resolver Classes
 from http import BaseRequest, normalizeUri
 
 class Resolver():
-    root = None
-    duplicate = None
-
     @staticmethod
-    def setRoot(root):
-        """
-        Sets the root of the tree used for uri resolving
-        """
-        Resolver.root = root
-
-    @staticmethod
-    def getResourceForRequest(request,tree=None):
+    def getResourceForRequest(request,tree):
         """
         Traverse resource tree to find who will handle the request.
         """
-        if tree is not None:
-            resource = tree
-        else:
-            resource = Resolver.root
+        resource = tree
         lastObjectId = "%s" % resource
         request.path = '/'
         while request.postpath and not resource.isLeaf:
@@ -42,7 +29,7 @@ class Resolver():
         return resource
         
     @staticmethod
-    def getResourcePathForUri(uri, tree=None):
+    def getResourcePathForUri(uri, tree):
         """
         Traverse resource tree to find who will handle the request.
         @return list - [resource, path in the resource]
@@ -50,7 +37,6 @@ class Resolver():
         request = BaseRequest(uri)
         resource = Resolver.getResourceForRequest(request, tree)
         return [resource, request.path]
-    
 
 
 class Resource():

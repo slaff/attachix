@@ -1067,7 +1067,7 @@ class WebdavResource(GetPostResource):
             - etc.
         """)
         
-        [destResource, destPath ] = Resolver.getResourcePathForUri(destinationUri)
+        [destResource, destPath ] = Resolver.getResourcePathForUri(destinationUri, request.env['VHOST']['root'])
 
         logging.getLogger().debug("_handleCopyMove: From %s to %s" % (request.path, destPath))
 
