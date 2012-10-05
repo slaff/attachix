@@ -219,21 +219,18 @@ class GetPostResource(StaticResource):
         if not request.env.has_key('CONTENT_TYPE'):
             request.setResponseCode(400)
             return
-        
+
+        user = request.env.get('user')
         try:
-            isCollection = self.storageProvider.isCollection(request.path, user=request.env.get('user'))
+            isCollection = self.storageProvider.isCollection(request.path, user=user)
         except OSError, e:
             request.setResponseCode(404)
             return
 
         meta = {}
-        submittedFiles = 0
         # process all meta data
         for (name, param) in request.params.items():
-            if not hasattr(param,'filename'):
-                meta[name] = param
-            else:
-                submittedFiles += 1
+            meta[name] = param
 
         """
         if we post to a resource
@@ -254,32 +251,34 @@ class GetPostResource(StaticResource):
                     all resources in the collection
         """
         affectedFiles = {}
+        submittedFiles = len(request.files)
         try:
             if not isCollection:
                 if submittedFiles > 0:
                     request.setResponseCode(409)
                     return
                 else:
-                    self.storageProvider.setMeta(request.path, meta, user=request.env.get('user'))
+                    self.storageProvider.setMeta(request.path, meta, user=user)
             else:
                 if submittedFiles==0:
-                    self.storageProvider.setMeta(request.path, meta, user=request.env.get('user'))
+                    self.storageProvider.setMeta(request.path, meta, user=user)
 
                 if submittedFiles > 0:
                     path = request.path
                     if path[-1:] == '/':
                         path = path[:-1]
-                    for (name, param) in request.params.items():
-                        if hasattr(param,'filename') and param.filename!='':
-                            fileName = "%s/%s" % (path,baseName(param.filename))
+                    for name in request.files.keys():
+                        files = request.files.getall(name)
+                        for file in files:
+                            fileName = "%s/%s" % (path,baseName(file.filename))
                             logging.getLogger().debug("Storing File: %s" % fileName)
                             try:
-                                self.storageProvider.delete(fileName, user=request.env.get('user'))
-                                self.storageProvider.delMeta(fileName, user=request.env.get('user'))
+                                self.storageProvider.delete(fileName, user=user)
+                                self.storageProvider.delMeta(fileName, user=user)
                             except:
                                 pass
-                            affectedFiles[fileName] = self.storageProvider.create(fileName, param, request.env, user=request.env.get('user'))
-                            self.storageProvider.setMeta(fileName, meta, user=request.env.get('user'))
+                            affectedFiles[fileName] = self.storageProvider.create(fileName, file, request.env, user=user)
+                            self.storageProvider.setMeta(fileName, meta, user=user)
         except IOError, e:
             logging.getLogger().warn("@todo: Add error handling when creating file. Got error %s" % e)
             request.setResponseCode(409)
@@ -331,7 +330,7 @@ class WebdavResource(GetPostResource):
         """
         try:
             if self.storageProvider.isCollection(request.path, user=request.env.get('user')):
-                request.env['HTTP_DEPTH'] = [1]
+                request.env['HTTP_DEPTH'] = 1
                 return self.render_PROPFIND(request)
         except IOError, e:
             if e.errno == 2:
@@ -359,8 +358,8 @@ class WebdavResource(GetPostResource):
                     request.setHeader('Content-Length','0')
                     return result
 
-        request.env['HTTP_CONTENT-LENGTH'] = [0]
-        request.env['HTTP_DEPTH'] = [1]
+        request.env['CONTENT_LENGTH'] = 0
+        request.env['HTTP_DEPTH'] = 1
         self.render_PROPFIND(request)
 
         if inputParams.has_key('_callbackURL'):

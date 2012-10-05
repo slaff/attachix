@@ -62,11 +62,7 @@ def normalizeUri(uri):
     return uri
 
 def parseForm(request):
-    (form, files) = parse_form_data(request.env)
-    params = {}
-    params.update(form)
-    params.update(files)
-    return params
+    return  parse_form_data(request.env)
 
 def parseRangeHeader(range):
         """

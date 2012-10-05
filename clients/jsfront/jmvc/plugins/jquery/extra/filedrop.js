@@ -86,14 +86,13 @@
 
                 xhr.onreadystatechange = function (event) {
                   if (xhr.readyState == 4) {
-                     var response = JSON.parse(xhr.responseText)
                      $('#progress-bar').hide();
                      if(xhr.status < 400) {
-
+                         var response = JSON.parse(xhr.responseText)
                          success(response)
                      }
                      else {
-                         error(response)
+                         error(xhr, xhr.status)
                      }
                   }
         	};

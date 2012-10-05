@@ -6,7 +6,8 @@ class Request(http.BaseRequest):
     __inputStream = None
     __outputHeaders = {} # easy to search output headers
     __responseCallback = None
-    __params = None
+    __form  = None
+    __files = None
     env = {}
 
     __write = None # the internal write method
@@ -24,6 +25,8 @@ class Request(http.BaseRequest):
         self.__inputStream = env['wsgi.input']
         self.__responseCallback = responseCallback
         self.__write = None
+        self.__form  = None
+        self.__files = None
 
         self.env = env
 
@@ -76,15 +79,23 @@ class Request(http.BaseRequest):
 
         self._state = 3
 
+    def __processData(self):
+        try:
+           (self.__form, self.__files) = http.parseForm(self)
+        except Exception as e:
+           import traceback
+           logging.getLogger().warn("Got form parse error: %s.\n%s" % (e, traceback.format_exc()))
+           (self.__form, self.__files) = ({},{})
+
     @property
     def params(self):
-        if self.__params is None:
-            try:
-                self.__params = http.parseForm(self)
-            except Exception as e:
-                import traceback
-                logging.getLogger().warn("Got form parse error: %s.\n%s" % (e, traceback.format_exc()))
-                self.__params = {}
-            logging.getLogger().debug("Request params: %s" % self.__params)
-                
-        return self.__params
+        if self.__form is None:
+            self.__processData()
+        return self.__form
+
+    @property
+    def files(self):
+        if self.__files is None:
+            self.__processData()
+        return self.__files
+
