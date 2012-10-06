@@ -7479,100 +7479,121 @@ var _5=false;
 var _6=0;
 var _7=0;
 var _8=this;
+if(typeof _3["maxBatchSize"]=="undefined"){
+_3["maxBatchSize"]=8388608;
+}
 this.upload=function(){
 _5=true;
-var _9;
-var _a;
-for(_9 in _4){
+var _9={};
+var _a=0;
+var _b=0;
+var _c=null;
+var _d=[];
+for(_e in _4){
+var _f=_4[_e];
+_d=_e.split(":",2);
+var _10=_d[0];
+if(_c==null){
+_c=_10;
+}
+if(_c!=_10){
+continue;
+}
+_a+=_f.size;
+delete _4[_e];
+_9[_e]=_f;
+_b++;
+if(_a+_f.size>_3["maxBatchSize"]){
 break;
 }
-if(_9){
-_a=_4[_9];
-delete _4[_9];
 }
-if(!_a){
+if(!_b){
 _6=0;
 _7=0;
 _5=false;
 return;
 }
-var _b=_9.split(":",2);
-var _c=_b[0];
-_3["progress"](_a.name,0,((_7/_6)*100),event);
-var _d=function(_e){
-_7+=_a.size;
-_3["progress"](_a.name,100,((_7/_6)*100),_e);
-_3["success"](_e,_a);
+var _11=_d[1];
+if(_b>1){
+_11=_b+" files";
+}
+_3["progress"](_11,0,((_7/_6)*100),event);
+var _12=function(_13){
+_7+=_a;
+_3["progress"](_11,100,((_7/_6)*100),_13);
+_3["success"](_13,_f);
 _8.upload();
 };
-displayProgress=function(_f){
-var _10=_f.originalEvent;
-if(_10.lengthComputable){
-var _11=_10.position||_10.loaded;
-var _12=_10.totalSize||_10.total;
-var _13=(_11/_12)*100;
-var _14=((_7+_11)/_6)*100;
-_3["progress"](_a.name,_13,_14,_f);
+displayProgress=function(_14){
+var _15=_14.originalEvent;
+if(_15.lengthComputable){
+var _16=_15.position||_15.loaded;
+var _17=_15.totalSize||_15.total;
+var _18=(_16/_17)*100;
+var _19=((_7+_16)/_6)*100;
+_3["progress"](_11,_18,_19,_14);
 }
 };
 if(window.FormData){
-var _15=new FormData();
-_15.append("file",_a);
+var _1a=new FormData();
+for(var _e in _9){
+_1a.append("file[]",_9[_e]);
+}
 var xhr=new XMLHttpRequest();
 xhr.open("POST",_c);
 xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
-var _17=xhr.upload||xhr;
-jQuery(_17).bind("progress",displayProgress);
-xhr.onreadystatechange=function(_18){
+var _1c=xhr.upload||xhr;
+jQuery(_1c).bind("progress",displayProgress);
+xhr.onreadystatechange=function(_1d){
 if(xhr.readyState==4){
 $("#progress-bar").hide();
 if(xhr.status<400){
-var _19=JSON.parse(xhr.responseText);
-_d(_19);
+var _1e=JSON.parse(xhr.responseText);
+_12(_1e);
 }else{
 error(xhr,xhr.status);
 }
 }
 };
-xhr.send(_15);
+xhr.send(_1a);
 return;
 }
 if(window.FileReader){
-this.loadEnd=function(_1a){
-var bin=_1a.currentTarget.result;
+this.loadEnd=function(_1f){
+var bin=_1f.currentTarget.result;
 if(bin==null){
 bin="";
 }
-var _1c=_a.type;
-if(_1c==""){
-_1c="text/plain";
+var _21=_f.type;
+if(_21==""){
+_21="text/plain";
 }
-var _1d="boundary"+(new Date()).getTime()+parseInt(Math.random()*3000);
-var _1e="--"+_1d+"\r\n";
-_1e+="Content-Disposition: form-data; name=\"upload\"; filename=\""+encodeURIComponent(_a.name)+"\""+"\r\n";
-_1e+="Content-Length: "+_a.size+"\r\n";
-_1e+="Content-Type: "+_1c+"\r\n\r\n";
-_1e+=bin+"\r\n";
+var _22="boundary"+(new Date()).getTime()+parseInt(Math.random()*3000);
+var _23="--"+_22+"\r\n";
+_23+="Content-Disposition: form-data; name=\"upload\"; filename=\""+encodeURIComponent(_f.name)+"\""+"\r\n";
+_23+="Content-Length: "+_f.size+"\r\n";
+_23+="Content-Type: "+_21+"\r\n\r\n";
+_23+=bin+"\r\n";
 if(_3["data"]!={}){
 for(name in _3["data"]){
-_1e+="--"+_1d+"\r\n";
-_1e+="Content-Disposition: form-data; name=\""+name+"\""+"\r\n\r\n";
-_1e+=_3["data"][name]+"\r\n";
+_23+="--"+_22+"\r\n";
+_23+="Content-Disposition: form-data; name=\""+name+"\""+"\r\n\r\n";
+_23+=_3["data"][name]+"\r\n";
 }
 }
-_1e+="--"+_1d+"--"+"\r\n";
-jQuery.ajax({"url":_c,"type":"POST","dataType":"json","contentType":"multipart/form-data; boundary="+_1d,"data":_1e,"processData":false,"success":_d,"error":_3["error"],"beforeSend":function(xhr,_20){
+_23+="--"+_22+"--"+"\r\n";
+jQuery.ajax({"url":_10,"type":"POST","dataType":"json","contentType":"multipart/form-data; boundary="+_22,"data":_23,"processData":false,"success":_12,"error":_3["error"],"beforeSend":function(xhr,_25){
 if(typeof xhr.sendAsBinary=="function"){
 xhr.send=xhr.sendAsBinary;
 }
-var _21=xhr.upload||xhr;
-jQuery(_21).bind("progress",displayProgress);
+var _26=xhr.upload||xhr;
+jQuery(_26).bind("progress",displayProgress);
 return true;
 }});
 if(_3["show"]){
-var _22=document.createElement("div");
-_22.innerHTML="Loaded : "+_a.name+" size "+_a.size+" B";
-_3["show"].appendChild(_22);
+var _27=document.createElement("div");
+_27.innerHTML="Loaded : "+_f.name+" size "+_f.size+" B";
+_3["show"].appendChild(_27);
 }
 if(_3["status"]){
 jQuery(_3["status"]).html("Loaded : 100%<br/>Next file ...");
@@ -7581,47 +7602,47 @@ jQuery(_3["status"]).html("Loaded : 100%<br/>Next file ...");
 if(_3["dropError"]&&typeof _3["dropError"]=="function"){
 this.loadError=_3["dropError"];
 }else{
-this.loadError=function(_23){
+this.loadError=function(_28){
 if(_3["status"]){
 return;
 }
-var _24="";
-switch(_23.target.error.code){
-case _23.target.error.NOT_FOUND_ERR:
-_24="File not found!";
+var _29="";
+switch(_28.target.error.code){
+case _28.target.error.NOT_FOUND_ERR:
+_29="File not found!";
 break;
-case _23.target.error.NOT_READABLE_ERR:
-_24="File not readable!";
+case _28.target.error.NOT_READABLE_ERR:
+_29="File not readable!";
 break;
-case _23.target.error.ABORT_ERR:
+case _28.target.error.ABORT_ERR:
 break;
 default:
-_24="Read error.";
+_29="Read error.";
 }
-jQuery(_3["status"]).html(_24);
+jQuery(_3["status"]).html(_29);
 };
 }
 if(_3["dropProgress"]&&typeof _3["dropProgress"]=="function"){
 this.loadProgress=_3["dropProgress"];
 }else{
-this.loadProgress=function(_25){
+this.loadProgress=function(_2a){
 if(!_3["status"]){
 return;
 }
-if(_25.lengthComputable){
-var _26=Math.round((_25.loaded*100)/_25.total);
-jQuery(_3["status"]).html("Loaded : "+_26+"%");
+if(_2a.lengthComputable){
+var _2b=Math.round((_2a.loaded*100)/_2a.total);
+jQuery(_3["status"]).html("Loaded : "+_2b+"%");
 }
 };
 }
 if(_3["dropLoaded"]&&typeof _3["dropLoaded"]=="function"){
 this.previewNow=_3["dropLoaded"];
 }else{
-this.previewNow=function(_27){
-bin=_28.result;
+this.previewNow=function(_2c){
+bin=_2d.result;
 var img=document.createElement("img");
 img.className="addedIMG";
-img.file=_a;
+img.file=_f;
 img.src=bin;
 document.getElementById(show).appendChild(img);
 };
@@ -7640,96 +7661,123 @@ reader.onerror=this.loadError;
 reader.onprogress=this.loadProgress;
 }
 }
-var _28=new FileReader();
-if(_28.addEventListener){
-_28.addEventListener("loadend",this.previewNow,false);
+var _2d=new FileReader();
+if(_2d.addEventListener){
+_2d.addEventListener("loadend",this.previewNow,false);
 }else{
-_28.onloadend=this.previewNow;
+_2d.onloadend=this.previewNow;
 }
-reader.readAsBinaryString(_a);
+reader.readAsBinaryString(_f);
 if(_3["show"]){
-_28.readAsDataURL(_a);
+_2d.readAsDataURL(_f);
 }
 }else{
 xhr=new XMLHttpRequest();
-xhr.open("POST",_c,true);
-xhr.setRequestHeader("UP-FILENAME",_a.name);
-xhr.setRequestHeader("UP-SIZE",_a.size);
-xhr.setRequestHeader("UP-TYPE",_a.type);
-xhr.send(_a);
+xhr.open("POST",_10,true);
+xhr.setRequestHeader("UP-FILENAME",_f.name);
+xhr.setRequestHeader("UP-SIZE",_f.size);
+xhr.setRequestHeader("UP-TYPE",_f.type);
+xhr.send(_f);
 if(_3["status"]){
 _3["status"].html("Loaded : 100%");
 }
 if(_3["show"]){
-var _2a=document.createElement("div");
-_2a.innerHTML="Loaded : "+_a.name+" size "+_a.size+" B";
-_3["show"].appendChild(_2a);
+var _2f=document.createElement("div");
+_2f.innerHTML="Loaded : "+_f.name+" size "+_f.size+" B";
+_3["show"].appendChild(_2f);
 }
 }
 };
-this.drop=function(_2b){
-_2b.stopPropagation();
-_2b.preventDefault();
-var _2c=_3["action"];
+this.drop=function(_30){
+_30.stopPropagation();
+_30.preventDefault();
+var _31=_3["action"];
 if(typeof _3["action"]=="function"){
-_2c=_3["action"](_2b.currentTarget);
+_31=_3["action"](_30.currentTarget);
 }
-_2c=String(_2c);
-var dt=_2b.originalEvent.dataTransfer;
+_31=String(_31);
+var dt=_30.originalEvent.dataTransfer;
 for(var i=0,max=dt.files.length;i<max;i++){
-var _30=dt.files[i];
-var key=_2c+":"+_30.name;
+var _35=dt.files[i];
+var key=_31+":"+_35.name;
 if(!_4[key]){
-_4[key]=_30;
-_6+=_30.size;
+_4[key]=_35;
+_6+=_35.size;
 }
 }
 if(!dt.files.length&&typeof _3["dropData"]=="function"){
-_3["dropData"](_2c,dt);
+_3["dropData"](_31,dt);
 }else{
 if(!_5){
 _8.upload();
 }
 }
 };
-_2.bind("dragenter",function(_32){
-_32.stopPropagation();
+_2.bind("dragenter",function(_37){
+_37.stopPropagation();
 jQuery(this).attr("dragenter",true);
-var _33=this;
+var _38=this;
 window.setTimeout(function(){
-jQuery(_33).removeAttr("dragenter");
+jQuery(_38).removeAttr("dragenter");
 },2000);
 });
-_2.bind("dragover",function(_34){
-_34.stopPropagation();
-_34.preventDefault();
+_2.bind("dragover",function(_39){
+_39.stopPropagation();
+_39.preventDefault();
 });
-_2.bind("dragleave",function(_35){
-_35.stopPropagation();
+_2.bind("dragleave",function(_3a){
+_3a.stopPropagation();
 jQuery(this).removeAttr("dragenter");
 });
 _2.bind("drop",this.drop);
+_2.bind("paste",function(_3b){
+_3b.stopPropagation();
+_3b.preventDefault();
+var _3c=_3["action"];
+if(typeof _3["action"]=="function"){
+_3c=_3["action"](_3b.currentTarget);
+}
+_3c=String(_3c);
+var _3d=_3b.originalEvent.clipboardData;
+jQuery.each(_3d.items,function(_3e,_3f){
+var _40=_3f.type.match(/image\/(.*)/);
+if(_40){
+var _41=_3f.getAsFile();
+if(!_41.name){
+_41.name=Math.random()+"."+_40[1];
+}
+var key=_3c+":"+_41.name;
+if(!_4[key]){
+_4[key]=_41;
+_6+=_41.size;
+}
+if(!_5){
+_8.upload();
+}
+}
+});
+});
 };
-$.fn.filedrop=function(_36){
-var _37={"status":"","action":"","list":"","success":function(_38){
-},"error":function(_39){
-},"finish":function(_3a){
-},"progress":function(_3b,_3c,_3d,_3e){
-_3d=Math.ceil(_3d);
+$.fn.filedrop=function(_43){
+var _44={"status":"","action":"","list":"","success":function(_45){
+},"error":function(_46){
+},"finish":function(_47){
+},"progress":function(_48,_49,_4a,_4b){
+_4a=Math.ceil(_4a);
 if(!$("#progress-bar").length){
 $("body").append("<div id=\"progress-bar\"><div id=\"progress-bar-meter\"></div></div>");
 }
-if(_3d<99){
-$("#progress-bar-meter").html(_3b+": "+_3d+"%");
+if(_4a<99){
+$("#progress-bar-meter").html(_48+": "+_4a+"%");
 $("#progress-bar").show();
 }else{
 $("#progress-bar").hide();
 }
-},"dropData":function(_3f,_40){
+},"dropData":function(_4c,_4d){
 },"dropError":null,"dropProgress":null,"dropLoaded":null,"data":{}};
-var _36=$.extend(_37,_36);
+var _43=$.extend(_44,_43);
 jQuery(this).addClass("droparea");
-new uploader(this,_36);
+new uploader(this,_43);
 };
 })(jQuery);
 ;

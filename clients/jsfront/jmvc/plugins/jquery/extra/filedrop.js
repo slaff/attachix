@@ -25,37 +25,60 @@
         var uploadedSize = 0;
         var self = this
 
+        if (typeof options['maxBatchSize']=='undefined') {
+            options['maxBatchSize'] = 8388608; // 8 MB
+        }
+
         // Upload files from the queue
         this.upload = function() {
             uploading = true;
 
-            var fileName;
-            var file;
+            // Combine the upload of couple of files in one batch request
+            var files = {}
+            var currentSize = 0;
+            var filesCount = 0
+            var currentActionURL = null;
+            var parts = []
             for(fileName in fileQueue) {
-                break;
-            }
+                var file = fileQueue[fileName]
+                parts = fileName.split(':',2);
+                var actionURL = parts[0];
 
-            if(fileName) {
-                file = fileQueue[fileName]
+                if (currentActionURL == null) {
+                    currentActionURL = actionURL
+                }
+
+                if (currentActionURL != actionURL) {
+                    continue;
+                }
+
+                currentSize += file.size
                 delete fileQueue[fileName];
+                files[fileName] = file
+                filesCount++
+                if (currentSize + file.size > options['maxBatchSize']) {
+                    break;
+                }
             }
 
-            if (!file) {
+            if (!filesCount) {
                 totalSize = 0;
                 uploadedSize = 0;
                 uploading = false;
                 return
             }
 
-            var parts = fileName.split(':',2);
-            var actionURL = parts[0];
+            var text = parts[1];
+            if(filesCount > 1) {
+                text = filesCount + " files"
+            }
 
             // Show the initial upload progress bar
-            options['progress'](file.name, 0, ((uploadedSize/totalSize) * 100), event);
+            options['progress'](text, 0, ((uploadedSize/totalSize) * 100), event);
 
             var success = function(event) {
-                uploadedSize += file.size
-                options['progress'](file.name, 100, ((uploadedSize/totalSize) * 100), event);
+                uploadedSize += currentSize
+                options['progress'](text, 100, ((uploadedSize/totalSize) * 100), event);
                 options['success'](event, file)
 
                 self.upload()
@@ -69,17 +92,18 @@
 
                     var filePercentComplete = (position / total)*100;
                     var totalPercentComplete = ( (uploadedSize + position) / totalSize) * 100;
-                    options['progress'](file.name, filePercentComplete, totalPercentComplete, event);
+                    options['progress'](text, filePercentComplete, totalPercentComplete, event);
                 }
             }
 
             // Firefox 4, Chrome
             if(window.FormData) {
                 var form = new FormData();
-                form.append('file', file);
-
+                for(var fileName in files) {
+                    form.append('file[]', files[fileName]);
+                }
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", actionURL);
+                xhr.open("POST", currentActionURL);
                 xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 var source = xhr.upload || xhr;
                 jQuery(source).bind('progress', displayProgress);
@@ -337,6 +361,48 @@
             jQuery(this).removeAttr('dragenter')
         });
         dropArea.bind('drop', this.drop);
+
+        dropArea.bind('paste', function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            var actionURL = options['action'];
+            if (typeof options['action'] == 'function') {
+                actionURL = options['action'](event.currentTarget)
+            }
+            // Cast the URL to string at this point
+            actionURL = String(actionURL)
+
+            var clipboardData = event.originalEvent.clipboardData
+            jQuery.each(clipboardData.items, function(index, value) {
+               var match = value.type.match(/image\/(.*)/)
+               if (match) {
+                   var file = value.getAsFile()
+                   if (!file.name) {
+                       file.name = Math.random()+'.'+match[1]
+                   }
+
+                   var key = actionURL + ":" + file.name;
+                   if (!fileQueue[key]) {
+                        fileQueue[key] = file
+                        totalSize += file.size
+                   }
+
+                   if (!uploading) {
+                        self.upload();
+                   }
+
+                   /*
+                   var reader = new FileReader()
+                   reader.onload = function(event) {
+                        var dataURL = event.target.result
+                        var name = file.name
+                   }
+                   reader.readAsDataURL(file)
+                   */
+               }
+            })
+        })
     };
 
     $.fn.filedrop = function(options){
