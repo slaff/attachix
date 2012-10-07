@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core.sequence import Generator
+from sequence import Generator
 class ActiveRecord():
     _table = None # this has to be set in the child class
     _data = {}
