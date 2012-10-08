@@ -1,8 +1,6 @@
 import re
-import time
 
 from gevent import Timeout
-import gevent.core
 from core.models.event import Event
 
 class Events():
@@ -11,13 +9,9 @@ class Events():
     """
     
     auth = None
-    keepAlive = None
-    lastKeepAlive = None
 
     def __init__(self, auth):
         self.auth = auth
-        self.lastKeepAlive = None
-        self.keepAlive = 30 # in seconds
 
     def get_Files(self, request):
         request.setResponseCode(200)
@@ -69,7 +63,8 @@ class Events():
             @todo:     Figure out how to set a timeout that sends noop command
                        every 15 seconds and keeps the connection alive for ever.
             """
-            timeout = Timeout(wait).start()
+            if close:
+                timeout = Timeout(wait).start()
             for event in events:
                 if request.env.has_key('BASE_URI'):
                     event = re.sub(r'"resource":\s*"(.*?)"', '"resource": "%s\\1"' % request.env['BASE_URI'], event)
@@ -86,13 +81,13 @@ class Events():
                 if match:
                     text += "id: %s\n\n" % match.group(1)
                 yield text
-                self.lastKeepAlive = time.time()
 
                 if not close:
                     continue
 
-                # if we have to close - then wait 5 seconds to collect the data and then close the connection.
-                timeout.clear()
+                # if we have to close then reset the timeout
+                if timeout is not None:
+                    timeout.clear()
                 timeout = Timeout(wait).start()
                 yield ":noop\n"
         except Timeout:
