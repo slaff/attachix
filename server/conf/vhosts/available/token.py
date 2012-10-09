@@ -31,7 +31,9 @@ class VHost(default.VHost):
         root.children['~static'].putChild('propfind.xslt', xsltResource)
 
         self.root = resource.TokenResource(
-                                authProvider=authentication.TokenAuthProvider(secret=self.config['share']['secret']),
+                                authProvider=authentication.TokenAuthProvider(secret=self.config['share']['secret'],
+                                             userProvider=self.user
+                                             ),
                                 tree=root)
         # the default favourite
         faviconResource = resource.StaticResource(
