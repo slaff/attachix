@@ -155,7 +155,7 @@ class StaticResource(Resource):
             if meta[request.path].has_key('{DAV:}encoding') and \
             meta[request.path]['{DAV:}encoding'] != 'binary':
                 contentType += '; charset="%s"' % meta[request.path]['{DAV:}encoding']
-            request.setHeader('Content-Type', contentType)
+            request.setHeader('Content-Type', contentType.encode('ascii'))
 
         if self.contentDisposition:
             request.setHeader('Content-Disposition', '%s' % self.contentDisposition)
