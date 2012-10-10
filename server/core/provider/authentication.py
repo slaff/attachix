@@ -379,7 +379,7 @@ class TokenAuthProvider(AuthProvider):
             request.env['auth']['path'] = '/' + request.env['auth']['path']
 
         prefixEnd = request.uri.find(request.env['auth']['path'])
-        request.baseUri = request.uri[0:prefixEnd]
+        request.env['BASE_URI'] = request.uri[0:prefixEnd]
 
         #request.postpath = result[3].strip('/').split('/')
 
