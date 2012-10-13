@@ -21,7 +21,7 @@ from core.http import getResponseType
 from core.http import stringToDatetime
 from core.http import parseRangeHeader
 from core.http import normalizeUri
-import core.properties as properties
+from core.properties import createMutlipartResponse
 from core.provider.locking import SCOPE_EXCLUSIVE
 from core.provider.locking import SCOPE_SHARED
 from core.provider.locking import TYPE_READ
@@ -390,7 +390,8 @@ class WebdavResource(GetPostResource):
             except:
                 pass
 
-        if not request.env['user'].hasQuota(size):
+        user = request.env['user']
+        if not user.hasQuota(size):
             # add JSON response when asked
             responseBody = ''
             if getResponseType(request) == 'json':
@@ -413,7 +414,7 @@ class WebdavResource(GetPostResource):
 
         difference = size
         try:
-            meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+            meta = self.storageProvider.getMeta(request.path, user=user)
             isCollection = meta[request.path].get('{DAV:}resourcetype', 0)
             isCollection = bool(isCollection)
             if isCollection == True:
@@ -430,13 +431,13 @@ class WebdavResource(GetPostResource):
         if overwrite:
             try:
                 # @todo: Or remove the view files ONLY
-                self.storageProvider.delete(request.path, user=request.env.get('user'))
-                self.storageProvider.delMeta(request.path, user=request.env.get('user'))
+                self.storageProvider.delete(request.path, user=user)
+                self.storageProvider.delMeta(request.path, user=user)
             except:
                 logging.getLogger().error("Unable to delete old resource before overwriting")
 
         try:
-            result = self.storageProvider.create(request.path, request, request.env, expectedSize=size, user=request.env.get('user'))
+            result = self.storageProvider.create(request.path, request, request.env, expectedSize=size, user=user)
             request.env.get('user').changeQuota(-difference)
         except IOError, e:
             logging.getLogger().warn("@todo: Add error handling when creating file. Got error %s" % e)
@@ -448,7 +449,7 @@ class WebdavResource(GetPostResource):
         request.env['HTTP_USER_AGENT'].strip()[0:9]=='WebDAVFS/' and \
         request.env.has_key('HTTP_IF'):
             try:
-                meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+                meta = self.storageProvider.getMeta(request.path, user=user)
                 request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'])
                 request.setResponseCode(204)
                 return
@@ -618,37 +619,7 @@ class WebdavResource(GetPostResource):
                     pass
         else:
             request.setHeader('Content-Type', 'text/xml; charset="utf-8"')
-            rootEl = ET.Element("{DAV:}multistatus")
-            for (path, data) in meta.items():
-                responseEl = ET.SubElement(rootEl, '{DAV:}response')
-                hrefEl = ET.SubElement(responseEl, '{DAV:}href')
-                href = path.replace(request.path, postfix,1)
-                href = re.sub(r'/{2,}', '/', href)
-                hrefEl.text = urlquote(href, safe='/')
-                propstatEl = ET.SubElement(responseEl, '{DAV:}propstat')
-                propEl = ET.SubElement(propstatEl, '{DAV:}prop')
-                missingProperties = requestedProperties
-                for (key, value) in data.items():
-                    if key[0:1] != '{':
-                        # The following brakes some webdav clients
-                        # There it is allowed only for the litmus tests
-                        #if not ( request.env.has_key('HTTP_User-Agent') and \
-                        #request.env['HTTP_User-Agent'][0].find('litmus') > -1):
-                            # if no namespace is given then assign 'none:' as default namespace
-                            key = "{none:}%s" % key
-                    properties.addXmlProp(propEl, key, value)
-                    if len(missingProperties) and missingProperties.has_key(key):
-                        del missingProperties[key]
-                statEl = ET.SubElement(propstatEl, '{DAV:}status')
-                statEl.text = "HTTP/1.1 200 OK"
-                if len(missingProperties):
-                    missingPropstatEl = ET.SubElement(responseEl, '{DAV:}propstat')
-                    missingPropEl = ET.SubElement(missingPropstatEl, '{DAV:}prop')
-                    for property in missingProperties:
-                        ET.SubElement(missingPropEl, property)
-                    missingStatEl = ET.SubElement(missingPropstatEl, '{DAV:}status')
-                    missingStatEl.text = "HTTP/1.1 404 Not Found"
-
+            rootEl = createMutlipartResponse(request.path, meta, requestedProperties, postfix)
             responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
                            '<?xml-stylesheet type="text/xsl" href="/~static/propfind.xslt"?>' + "\n" +\
                           ET.tostring(rootEl)

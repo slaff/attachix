@@ -1,11 +1,12 @@
 """
 Authentication classes
 """
-from authentications.backend import MD5_HASH, CLEAR_TEXT, OTHER
-
 import logging
 
 from core.provider.authentications.backend import AbstractBackend
+
+from authentications.backend import MD5_HASH, CLEAR_TEXT
+
 class AuthProvider():
     request  = None
     identity = None
@@ -207,7 +208,8 @@ class DigestAuthProvider(AuthProvider):
     def A2(self, request):
         # If the "qop" directive's value is "auth" or is unspecified, then A2 is:
         # A2 = Method ":" digest-uri-value
-        return request.method + ":" + request.rawUri
+        #return request.method + ":" + request.rawUri
+        return request.method + ":" + self.getRawURI(request)
         # Not implemented
         # If the "qop" value is "auth-int", then A2 is:
         # A2 = Method ":" digest-uri-value ":" H(entity-body)
@@ -233,7 +235,8 @@ class DigestAuthProvider(AuthProvider):
                            + ":" + request.env['__DIGEST_PARAMS__']["nc"]
                            + ":" + request.env['__DIGEST_PARAMS__']["cnonce"]
                            + ":" + request.env['__DIGEST_PARAMS__']["qop"]
-                           + ":" + self.H(":" + request.rawUri))
+                           # + ":" + self.H(":" + request.rawUri))
+                           + ":" + self.H(":" + self.getRawURI(request)))
 
     def response(self, request):
         if request.env['__DIGEST_PARAMS__'].has_key("qop"):
@@ -341,6 +344,11 @@ class DigestAuthProvider(AuthProvider):
         else:
             self.createAuthheader(request)
             return self._returnTuple(401)
+
+    def getRawURI(self, request):
+        if request.env.has_key('PATH_RAW'):
+            return request.env['PATH_RAW']
+        return request.rawUri
 
     def getErrorResponse(self, request):
         body = AuthProvider.getErrorResponse(self, request)[2]

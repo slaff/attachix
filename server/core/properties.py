@@ -1,8 +1,49 @@
+# -*- coding: utf-8 -*-
+
 """
-Webdav Property Formatter
+Webdav XML Property Formatter
 """
+import logging
+import re
 import time
+from urllib import quote as urlquote
 import xml.etree.cElementTree as ET
+
+from copy import copy
+def createMutlipartResponse(requestPath, meta, requestedProperties,postfix):
+    rootEl = ET.Element("{DAV:}multistatus")
+    for (path, data) in meta.items():
+        responseEl = ET.SubElement(rootEl, '{DAV:}response')
+        hrefEl = ET.SubElement(responseEl, '{DAV:}href')
+        href = path.replace(requestPath, postfix,1)
+        href = re.sub(r'/{2,}', '/', href)
+        hrefEl.text = urlquote(href, safe='/')
+        propstatEl = ET.SubElement(responseEl, '{DAV:}propstat')
+        propEl = ET.SubElement(propstatEl, '{DAV:}prop')
+        missingProperties = copy(requestedProperties)
+        for (key, value) in data.items():
+            if len(requestedProperties) > 0 and not requestedProperties.has_key(key):
+                continue
+            if key[0:1] != '{':
+                # The following brakes some webdav clients
+                # There it is allowed only for the litmus tests
+                #if not ( request.env.has_key('HTTP_User-Agent') and \
+                #request.env['HTTP_User-Agent'][0].find('litmus') > -1):
+                    # if no namespace is given then assign 'none:' as default namespace
+                    key = "{none:}%s" % key
+            addXmlProp(propEl, key, value)
+            if len(missingProperties) and missingProperties.has_key(key):
+                del missingProperties[key]
+        statEl = ET.SubElement(propstatEl, '{DAV:}status')
+        statEl.text = "HTTP/1.1 200 OK"
+        if len(missingProperties):
+            missingPropstatEl = ET.SubElement(responseEl, '{DAV:}propstat')
+            missingPropEl = ET.SubElement(missingPropstatEl, '{DAV:}prop')
+            for property in missingProperties:
+                ET.SubElement(missingPropEl, property)
+            missingStatEl = ET.SubElement(missingPropstatEl, '{DAV:}status')
+            missingStatEl.text = "HTTP/1.1 404 Not Found"
+    return rootEl
 
 def addXmlProp(propEl, key, value):
     # create prop element

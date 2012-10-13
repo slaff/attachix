@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import core.notify.dispatcher as notify
 import core.provider.authentication as auth
 import core.provider.authentications.backend as authBackend
@@ -8,6 +9,8 @@ from core.provider.users.backend import DummyBackend as DummyUser
 import core.resource.base as resource
 import core.resource.mvc as mvcResource
 import core.vhost as vhost
+
+from experimental.resource.office import CaldavResource, CardavResource
 
 class VHost(vhost.VHost):
     host = ['localhost']
@@ -77,5 +80,35 @@ class VHost(vhost.VHost):
                                 'core/resource/controller/',
                                 auth=self.auth
                               ))
+
+        from experimental.provider.calendar import DummyCalendarProvider
+        root.putChild('~calendar', CaldavResource(
+                               storage.UserStorageProvider(
+                                    path="/tmp/calendar/",
+                                    propertyProvider=property.Redis('prop_calendar_'),
+                                    nestedLevel=2,
+                                    createIfNonExistent=True
+                               ),
+                               self.locking,
+                               self.auth,
+                               self.notifier,
+                               calendarProvider=DummyCalendarProvider()
+                     ))
+
+        from experimental.provider.contact import DummyContactProvider
+        root.putChild('~contacts', CardavResource(
+                               storage.UserStorageProvider(
+                                     path="/tmp/contacts",
+                                     propertyProvider=property.Redis(
+                                                'prop_contacts_'
+                                     ),
+                                     nestedLevel=2,
+                                     createIfNonExistent=True
+                               ),
+                               self.locking,
+                               self.auth,
+                               self.notifier,
+                               contactProvider=DummyContactProvider()
+                     ))
 
         self.root = root

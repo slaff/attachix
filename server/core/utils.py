@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import gevent
 import magic
 import ujson as json
 
@@ -299,3 +300,16 @@ class StreamRange():
             raise StopIteration
 
         return self.stream[start : end]
+
+import hashlib
+def getMD5(stream):
+    md5Sum = hashlib.md5()
+    blockSize = 2**20
+    while True:
+        data = stream.read(blockSize)
+        if not data:
+            break
+        md5Sum.update(data)
+        # @notice: possible non-blocking func will require one sleep with 0 seconds
+        gevent.sleep(0.00)
+    return md5Sum
