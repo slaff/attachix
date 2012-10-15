@@ -118,6 +118,12 @@ class CaldavResource(WebdavResource):
         return result
 
     def render_REPORT(self, request):
+        user = request.env.get('user')
+        if not self.storageProvider.isCollection(request.path, user=user):
+            # Forbid the reporting method over non-collections
+            request.setResponseCode(403)
+            return
+
         try:
             tree = ET.parse(request);
             root = tree.getroot()
@@ -125,30 +131,6 @@ class CaldavResource(WebdavResource):
             request.setResponseCode(400)
             return
 
-        """
-<C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
-  <D:prop>
-    <D:getetag/>
-  </D:prop>
-  <C:filter>
-    <C:comp-filter name="VCALENDAR">
-      <C:comp-filter name="VEVENT">
-        <C:time-range start="20120907T104015Z" end="20121116T104015Z"/>
-      </C:comp-filter>
-    </C:comp-filter>
-  </C:filter>
-</C:calendar-query>
-        """
-
-        """
-<C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
-  <D:prop>
-    <D:getetag/>
-    <C:calendar-data/>
-  </D:prop>
-  <D:href>/calendar</D:href>
-</C:calendar-multiget>
-        """
         requestedProperties = {} # hash with property name and its status
         props = root.findall('./{DAV:}prop')
         for prop in props:
@@ -164,6 +146,15 @@ class CaldavResource(WebdavResource):
         user=request.env.get('user')
         paths = {}
         if root.tag == "{urn:ietf:params:xml:ns:caldav}calendar-multiget":
+            """
+<C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+  <D:prop>
+    <D:getetag/>
+    <C:calendar-data/>
+  </D:prop>
+  <D:href>/calendar</D:href>
+</C:calendar-multiget>
+            """
             # get all items in the requested calendar folder
             if len(requestedHrefs) == 1:
                 paths[request.path] = 1
@@ -172,17 +163,100 @@ class CaldavResource(WebdavResource):
                     path = href.replace(request.uri,request.path,1)
                     paths[path] = 0
         elif root.tag == "{urn:ietf:params:xml:ns:caldav}calendar-query":
+            """
+<C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+  <D:prop>
+    <D:getetag/>
+  </D:prop>
+  <C:filter>
+    <C:comp-filter name="VCALENDAR">  <!-- CollectionType -->
+      <C:comp-filter name="VEVENT">   <!-- ObjectType
+        <C:time-range start="20120907T104015Z" end="20121116T104015Z"/>
+      </C:comp-filter>
+    </C:comp-filter>
+  </C:filter>
+</C:calendar-query>
+            """
             ranges = []
             filters = root.findall('./{urn:ietf:params:xml:ns:caldav}filter/{urn:ietf:params:xml:ns:caldav}comp-filter')
             for filter in filters:
-                if filter.attrib['name'].upper()=='VCALENDAR':
-                    eventFilters = filter.findall('./{urn:ietf:params:xml:ns:caldav}comp-filter')
-                    for eventFilter in eventFilters:
-                        if eventFilter.attrib['name'].upper()=='VEVENT':
-                            timeRanges = eventFilter.findall('./{urn:ietf:params:xml:ns:caldav}time-range')
-                            for timeRange in timeRanges:
-                                ranges.append("%s:%s" % (timeRange.attrib['start'], timeRange.attrib['end']))
-            paths = self.calendarProvider.search(request.path, {'time-range': ranges})
+                collectionType = filter.attrib['name'].upper() # VCALENDAR, VJOURNAL
+                eventFilters = filter.findall('./{urn:ietf:params:xml:ns:caldav}comp-filter')
+                for eventFilter in eventFilters:
+                    objectType = eventFilter.attrib['name'].upper() # VEVENT, VTODO, VALARM, ..
+                    timeRanges = eventFilter.findall('./{urn:ietf:params:xml:ns:caldav}time-range')
+                    for timeRange in timeRanges:
+                        ranges.append("%s:%s" % (timeRange.attrib['start'], timeRange.attrib['end']))
+                    """
+                    <?xml version="1.0" encoding="utf-8" ?>
+   <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav">
+     <D:prop xmlns:D="DAV:">
+       <D:getetag/>
+       <C:calendar-data/>
+     </D:prop>
+     <C:filter>
+       <C:comp-filter name="VCALENDAR">
+         <C:comp-filter name="VEVENT">
+           <C:prop-filter name="UID">
+             <C:text-match collation="i;octet"
+             >DC6C50A017428C5216A2F1CD@example.com</C:text-match>
+           </C:prop-filter>
+         </C:comp-filter>
+       </C:comp-filter>
+     </C:filter>
+   </C:calendar-query>
+
+   <?xml version="1.0" encoding="utf-8" ?>
+   <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav">
+     <D:prop xmlns:D="DAV:">
+       <D:getetag/>
+       <C:calendar-data/>
+     </D:prop>
+     <C:filter>
+       <C:comp-filter name="VCALENDAR">
+         <C:comp-filter name="VEVENT">
+           <C:prop-filter name="ATTENDEE">
+             <C:text-match collation="i;ascii-casemap"
+              >mailto:lisa@example.com</C:text-match>
+             <C:param-filter name="PARTSTAT">
+               <C:text-match collation="i;ascii-casemap"
+                >NEEDS-ACTION</C:text-match>
+             </C:param-filter>
+           </C:prop-filter>
+         </C:comp-filter>
+       </C:comp-filter>
+     </C:filter>
+   </C:calendar-query>
+                    """
+                    textMatches = {}
+                    propFilters = eventFilter.findall('./{urn:ietf:params:xml:ns:caldav}prop-filter')
+                    properties = []
+                    for propFilter in propFilters:
+                        field = propFilter.attrib['name']
+                        # if empty, add it to the requested properties
+                        if len(list(propFilter)) == 0:
+                            properties.append(field)
+                            continue
+                        matches = propFilter.findall('./{urn:ietf:params:xml:ns:caldav}text-match')
+                        values = {}
+                        for match in matches:
+                            values[match.text] = 0
+                            if match.attrib.has_key('negate-condition') \
+                            and match.attrib['negate-condition']=="yes":
+                                values[match.text] = 1
+                        textMatches[field] = values
+
+                    foundPaths = self.calendarProvider.search(request.path,
+                                                     collectionType,
+                                                     objectType,
+                                                     properties,
+                                                     {
+                                                     'time-range': ranges,
+                                                     'text-matches': textMatches
+                                                     },
+                                                     user=user)
+                    if foundPaths is not None and len(foundPaths):
+                        paths.update(foundPaths)
 
         events = {}
         for path,depth in paths.items():
