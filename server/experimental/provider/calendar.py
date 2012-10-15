@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logger
+import logging
 
 class DummyCalendarProvider():
     def isCalendar(self, path, user=None):
@@ -9,10 +9,10 @@ class DummyCalendarProvider():
         pass
 
     def search(self, path, collectionType, objectType, properties, filter, user=None):
-        logger.getLogger().debug("CollectionType: %s" % collectionType)
-        logger.getLogger().debug("ObjectType: %s" % objectType)
-        logger.getLogger().debug("Properties: %s" % properties)
-        logger.getLogger().debug("Filter: %s" % filter)
+        logging.getLogger().debug("CollectionType: %s" % collectionType)
+        logging.getLogger().debug("ObjectType: %s" % objectType)
+        logging.getLogger().debug("Properties: %s" % properties)
+        logging.getLogger().debug("Filter: %s" % filter)
         
         return {path:1}
 
