@@ -105,6 +105,8 @@ class CaldavResource(WebdavResource):
                 md5Sum.update(request.path)
                 etag = md5Sum.hexdigest()
 
+                request.setHeader("ETag", "%s" % etag)
+
                 self.storageProvider.setMeta(request.path,
                                         {'{DAV:}getetag': "%s" % etag,
                                          '{DAV:}getcontenttype': 'text/calendar'
@@ -230,20 +232,23 @@ class CaldavResource(WebdavResource):
                     """
                     textMatches = {}
                     propFilters = eventFilter.findall('./{urn:ietf:params:xml:ns:caldav}prop-filter')
-                    properties = []
+                    properties = {}
                     for propFilter in propFilters:
                         field = propFilter.attrib['name']
                         # if empty, add it to the requested properties
                         if len(list(propFilter)) == 0:
-                            properties.append(field)
+                            properties[field] = 0 # include
+                            continue
+                        if propFilter.findall('./{urn:ietf:params:xml:ns:caldav}is-not-defined'):
+                            properties[field] = 1 # exclude
                             continue
                         matches = propFilter.findall('./{urn:ietf:params:xml:ns:caldav}text-match')
                         values = {}
                         for match in matches:
-                            values[match.text] = 0
+                            values[match.text] = 0 # include
                             if match.attrib.has_key('negate-condition') \
                             and match.attrib['negate-condition']=="yes":
-                                values[match.text] = 1
+                                values[match.text] = 1 # exclude
                         textMatches[field] = values
 
                     foundPaths = self.calendarProvider.search(request.path,
@@ -374,6 +379,9 @@ class CardavResource(WebdavResource):
             md5Sum = getMD5(stream)
             md5Sum.update(request.path)
             etag = md5Sum.hexdigest()
+
+            request.setHeader("ETag", "%s" % etag)
+
             self.storageProvider.setMeta(request.path,
                                         {'{DAV:}getetag': "%s" % etag},
                                         user=user
