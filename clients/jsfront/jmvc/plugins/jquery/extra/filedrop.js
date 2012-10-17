@@ -363,6 +363,11 @@
         dropArea.bind('drop', this.drop);
 
         dropArea.bind('paste', function(event) {
+            // Fix for Mozilla to allow the normal paste operation
+            if (typeof(event.originalEvent.clipboardData) == 'undefined') {
+                return true;
+            }
+
             event.stopPropagation();
             event.preventDefault();
 
@@ -401,6 +406,8 @@
                    reader.readAsDataURL(file)
                    */
                }
+
+               return true;
             })
         })
     };

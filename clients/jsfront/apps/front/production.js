@@ -7731,6 +7731,9 @@ jQuery(this).removeAttr("dragenter");
 });
 _2.bind("drop",this.drop);
 _2.bind("paste",function(_3b){
+if(typeof (_3b.originalEvent.clipboardData)=="undefined"){
+return true;
+}
 _3b.stopPropagation();
 _3b.preventDefault();
 var _3c=_3["action"];
@@ -7755,6 +7758,7 @@ if(!_5){
 _8.upload();
 }
 }
+return true;
 });
 });
 };
