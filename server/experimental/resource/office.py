@@ -292,7 +292,7 @@ class CaldavResource(WebdavResource):
         rootEl = createMutlipartResponse(request.path, meta, requestedProperties, request.uri)
         responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
                        '<?xml-stylesheet type="text/xsl" href="/~static/propfind.xslt"?>' + "\n" +\
-                      ET.tostring(rootEl)
+                      ET.tostring(rootEl, "utf-8")
         request.writeDirect(responseBody, 207)
 
     def render_PROPFIND(self,request):
@@ -462,7 +462,7 @@ class CardavResource(WebdavResource):
         rootEl = createMutlipartResponse(request.path, meta, requestedProperties, request.uri)
         responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
                        '<?xml-stylesheet type="text/xsl" href="/~static/propfind.xslt"?>' + "\n" +\
-                      ET.tostring(rootEl)
+                      ET.tostring(rootEl, "utf-8")
         request.writeDirect(responseBody, 207)
 
         

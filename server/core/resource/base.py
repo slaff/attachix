@@ -622,7 +622,7 @@ class WebdavResource(GetPostResource):
             rootEl = createMutlipartResponse(request.path, meta, requestedProperties, postfix)
             responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
                            '<?xml-stylesheet type="text/xsl" href="/~static/propfind.xslt"?>' + "\n" +\
-                          ET.tostring(rootEl)
+                          ET.tostring(rootEl, "utf-8")
 
         request.writeDirect(responseBody, 207)
 
@@ -694,7 +694,7 @@ class WebdavResource(GetPostResource):
                     statEl.text = "HTTP/1.1 200 OK"
 
             responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
-                ET.tostring(rootEl)
+                ET.tostring(rootEl, "utf-8")
 
         request.writeDirect(responseBody, 207)
 
@@ -917,7 +917,7 @@ class WebdavResource(GetPostResource):
                         currentEl.text = "%s" % value
 
             responseBody = '<?xml version="1.0" encoding="utf-8" ?>' + "\n" + \
-                            ET.tostring(rootEl)
+                            ET.tostring(rootEl, "utf-8")
                             
         elif len(locks) > 1:
             request.setHeader('Content-Type', 'text/xml')
