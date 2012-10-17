@@ -42,7 +42,7 @@ class User():
         path = re.sub(r'/{2,}', '/', path)
         toEmail  = request.params['to_email']
         expiration      = shareConfig['expiration']
-        if request.params.has_key('days'):
+        if request.params.get('days'):
             expiration = 86400 * int(request.params['days'])
 
         cipher = SecureLink(**shareConfig['secret'])

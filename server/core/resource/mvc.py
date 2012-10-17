@@ -28,7 +28,7 @@ class ControllerResource(Resource):
 
         view = {}
         view['json'] = '%s'
-        if params.has_key('cb'):
+        if params.get('cb'):
             view['json'] = '%s(%s);' % (params['cb'], view['json'])
         view['xml']  = """<?xml version="1.0" encoding="utf-8" ?>
 <response>%s</response>"""
