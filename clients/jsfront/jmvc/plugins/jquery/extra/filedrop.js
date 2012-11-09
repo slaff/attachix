@@ -368,9 +368,6 @@
                 return true;
             }
 
-            event.stopPropagation();
-            event.preventDefault();
-
             var actionURL = options['action'];
             if (typeof options['action'] == 'function') {
                 actionURL = options['action'](event.currentTarget)
@@ -382,6 +379,9 @@
             jQuery.each(clipboardData.items, function(index, value) {
                var match = value.type.match(/image\/(.*)/)
                if (match) {
+                   event.stopPropagation();
+                   event.preventDefault();
+
                    var file = value.getAsFile()
                    if (!file.name) {
                        file.name = Math.random()+'.'+match[1]

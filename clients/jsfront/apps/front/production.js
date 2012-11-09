@@ -7734,8 +7734,6 @@ _2.bind("paste",function(_3b){
 if(typeof (_3b.originalEvent.clipboardData)=="undefined"){
 return true;
 }
-_3b.stopPropagation();
-_3b.preventDefault();
 var _3c=_3["action"];
 if(typeof _3["action"]=="function"){
 _3c=_3["action"](_3b.currentTarget);
@@ -7745,6 +7743,8 @@ var _3d=_3b.originalEvent.clipboardData;
 jQuery.each(_3d.items,function(_3e,_3f){
 var _40=_3f.type.match(/image\/(.*)/);
 if(_40){
+_3b.stopPropagation();
+_3b.preventDefault();
 var _41=_3f.getAsFile();
 if(!_41.name){
 _41.name=Math.random()+"."+_40[1];
