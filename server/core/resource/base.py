@@ -744,7 +744,7 @@ class WebdavResource(GetPostResource):
         meta = { request.path: {}}
         try:
             meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
-            request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'])
+            request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'].encode('ascii'))
         except EnvironmentError as e:
             if e.errno == storage.NOT_FOUND:
                 request.setResponseCode(404)
