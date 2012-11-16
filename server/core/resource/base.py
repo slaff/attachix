@@ -1027,7 +1027,11 @@ class WebdavResource(GetPostResource):
         if destinationUri != '/':
             destinationUri = urlparse.urlparse(destinationUri)[2]
         destinationUri = normalizeUri(destinationUri)
-        if request.uri == destinationUri:
+        (sourceParent, _) = os.path.split(request.uri)
+        if destinationUri == "":
+            destinationUri = '/'
+        if request.uri == destinationUri or\
+        sourceParent == destinationUri:
             request.setResponseCode(403)
             return
 
@@ -1085,10 +1089,9 @@ class WebdavResource(GetPostResource):
         try:
             call(request.path, destResource, destPath, depth)
         except IOError, e:
-            if e.errno == 2:
-                request.setResponseCode(409)
-                return
-            logging.getLogger().warn("@todo: add exception handling %s" % e)
+            request.setResponseCode(409)
+            logging.getLogger().warn("_handleCopyMove(): Got exception: %s" % e)
+            return
 
         if targetExists:
             request.setResponseCode(204)

@@ -209,17 +209,18 @@ jQuery.Controller.extend('filesController',
                                             alert('All files were uploaded successfully.');
                                       },
                                       'dropData': this.callback(function(target, dt) {
+                                          var self = this
                                           var source=dt.getData('text/uri-list')
                                           target = target + '/'+ files.basename(source)
                                           files.move(source, target,
                                                      function() {},
-                                                     function(xhr, test) {
+                                                     function(xhr, text) {
                                                          if (xhr.status == 403) {
                                                              alert('Error: The source and the destination are the same')
                                                              return
                                                          }
 
-                                                         this._errorHandler
+                                                         self._errorHandler(xhr, text)
                                                      })
                                       })
                                     };
