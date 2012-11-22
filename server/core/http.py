@@ -2,6 +2,7 @@
 """
 HTTP Request Class
 """
+import logging
 import calendar
 from multipart import parse_form_data
 import re
@@ -64,7 +65,7 @@ def normalizeUri(uri):
 def parseForm(request):
     return  parse_form_data(request.env)
 
-def parseRangeHeader(range):
+def parseRangeHeader(headerValue):
         """
         Parse the value of a Range header into (start, stop) pairs.
 
@@ -76,10 +77,7 @@ def parseRangeHeader(range):
         @raise ValueError: if the header is syntactically invalid or if the
             Bytes-Unit is anything other than 'bytes'.
         """
-        try:
-            kind, value = range.split('=', 1)
-        except ValueError:
-            raise ValueError("Missing '=' separator")
+        kind, value = headerValue.split('=', 1)
         kind = kind.strip()
         if kind != 'bytes':
             raise ValueError("Unsupported Bytes-Unit: %r" % (kind, ))

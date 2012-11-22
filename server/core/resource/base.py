@@ -172,7 +172,7 @@ class StaticResource(Resource):
             # process the range headers
             ranges = []
             try:
-                ranges = parseRangeHeader(request.env['HTTP_RANGE'][0])
+                ranges = parseRangeHeader(request.env['HTTP_RANGE'])
             except ValueError, ex:
                 logging.getLogger().warn("Wrong Range Header: %s. Error was: %s" % \
                                         (request.env['HTTP_RANGE'], ex))
@@ -191,11 +191,11 @@ class StaticResource(Resource):
                         tmp = end
                         end = start
                         start = tmp
-                    total += end - start
+                    total += end - start + 1
                     responseRanges.append("%s-%s/%s" % (start, end, length))
                 request.setHeader('Content-Range','bytes %s' % ','.join(responseRanges))
                 request.setResponseCode(206)
-                length = total + 1
+                length = total 
 
                 # change the stream to be StreamRange(stream, ranges)
                 stream = StreamRange(stream, ranges)

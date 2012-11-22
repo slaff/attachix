@@ -299,7 +299,7 @@ class StreamRange():
         except IndexError:
             raise StopIteration
 
-        return self.stream[start : end]
+        return self.stream[start : end+1]
 
 import hashlib
 def getMD5(stream):
