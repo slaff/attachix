@@ -180,7 +180,9 @@ class StaticResource(Resource):
             if len(ranges) > 0:
                 responseRanges = []
                 total = 0
-                for (start, end) in ranges:
+                for i, v in enumerate(ranges):
+                    start = v[0]
+                    end   = v[1]
                     start = int(start)
                     if end is not None:
                         end   = int(end)
@@ -191,6 +193,7 @@ class StaticResource(Resource):
                         tmp = end
                         end = start
                         start = tmp
+                    ranges[i] = (start,end)
                     total += end - start + 1
                     responseRanges.append("%s-%s/%s" % (start, end, length))
                 request.setHeader('Content-Range','bytes %s' % ','.join(responseRanges))
