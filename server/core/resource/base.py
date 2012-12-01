@@ -82,10 +82,10 @@ class StaticResource(Resource):
         """
         try:
             if not self.allowDirectoryListing and \
-            self.storageProvider.isCollection(request.path, user=request.env.get('user')):
+            self.storageProvider.isCollection(request.path, user=request.env.get('user'), cache=request.env['cache']):
                 # check if at least one of the index files is existing..
                 for file in self.indexFiles:
-                    if self.storageProvider.exists(request.path+'/'+file, user=request.env.get('user')):
+                    if self.storageProvider.exists(request.path+'/'+file, user=request.env.get('user'), cache=request.env['cache']):
                         request.path += '/'+file
                         return self.render_GET(request)
                     
@@ -100,8 +100,8 @@ class StaticResource(Resource):
 
         request.setHeader('Accept-Ranges', 'bytes')
         try:
-            stream = self.storageProvider.get(request.path, user=request.env.get('user'))
-            meta   = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+            stream = self.storageProvider.get(request.path, user=request.env.get('user'), cache=request.env['cache'])
+            meta   = self.storageProvider.getMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
         except IOError, e:
             logging.getLogger().error("render_GET: %s" % traceback.format_exc())
 
@@ -225,7 +225,7 @@ class GetPostResource(StaticResource):
 
         user = request.env.get('user')
         try:
-            isCollection = self.storageProvider.isCollection(request.path, user=user)
+            isCollection = self.storageProvider.isCollection(request.path, user=user, cache=request.env['cache'])
         except OSError, e:
             request.setResponseCode(404)
             return
@@ -261,10 +261,10 @@ class GetPostResource(StaticResource):
                     request.setResponseCode(409)
                     return
                 else:
-                    self.storageProvider.setMeta(request.path, meta, user=user)
+                    self.storageProvider.setMeta(request.path, meta, user=user, cache=request.env['cache'])
             else:
                 if submittedFiles==0:
-                    self.storageProvider.setMeta(request.path, meta, user=user)
+                    self.storageProvider.setMeta(request.path, meta, user=user, cache=request.env['cache'])
 
                 if submittedFiles > 0:
                     path = request.path
@@ -276,12 +276,12 @@ class GetPostResource(StaticResource):
                             fileName = "%s/%s" % (path,baseName(file.filename))
                             logging.getLogger().debug("Storing File: %s" % fileName)
                             try:
-                                self.storageProvider.delete(fileName, user=user)
-                                self.storageProvider.delMeta(fileName, user=user)
+                                self.storageProvider.delete(fileName, user=user, cache=request.env['cache'])
+                                self.storageProvider.delMeta(fileName, user=user, cache=request.env['cache'])
                             except:
                                 pass
-                            affectedFiles[fileName] = self.storageProvider.create(fileName, file, request.env, user=user)
-                            self.storageProvider.setMeta(fileName, meta, user=user)
+                            affectedFiles[fileName] = self.storageProvider.create(fileName, file, request.env, user=user, cache=request.env['cache'])
+                            self.storageProvider.setMeta(fileName, meta, user=user, cache=request.env['cache'])
         except IOError, e:
             logging.getLogger().warn("@todo: Add error handling when creating file. Got error %s" % e)
             request.setResponseCode(409)
@@ -332,7 +332,7 @@ class WebdavResource(GetPostResource):
         Get a resource data
         """
         try:
-            if self.storageProvider.isCollection(request.path, user=request.env.get('user')):
+            if self.storageProvider.isCollection(request.path, user=request.env.get('user'), cache=request.env['cache']):
                 request.env['HTTP_DEPTH'] = 1
                 return self.render_PROPFIND(request)
         except IOError, e:
@@ -417,7 +417,7 @@ class WebdavResource(GetPostResource):
 
         difference = size
         try:
-            meta = self.storageProvider.getMeta(request.path, user=user)
+            meta = self.storageProvider.getMeta(request.path, user=user, cache=request.env['cache'])
             isCollection = meta[request.path].get('{DAV:}resourcetype', 0)
             isCollection = bool(isCollection)
             if isCollection == True:
@@ -434,13 +434,13 @@ class WebdavResource(GetPostResource):
         if overwrite:
             try:
                 # @todo: Or remove the view files ONLY
-                self.storageProvider.delete(request.path, user=user)
-                self.storageProvider.delMeta(request.path, user=user)
+                self.storageProvider.delete(request.path, user=user, cache=request.env['cache'])
+                self.storageProvider.delMeta(request.path, user=user, cache=request.env['cache'])
             except:
                 logging.getLogger().error("Unable to delete old resource before overwriting")
 
         try:
-            result = self.storageProvider.create(request.path, request, request.env, expectedSize=size, user=user)
+            result = self.storageProvider.create(request.path, request, request.env, expectedSize=size, user=user, cache=request.env['cache'])
             request.env.get('user').changeQuota(-difference)
         except IOError, e:
             logging.getLogger().warn("@todo: Add error handling when creating file. Got error %s" % e)
@@ -452,7 +452,7 @@ class WebdavResource(GetPostResource):
         request.env['HTTP_USER_AGENT'].strip()[0:9]=='WebDAVFS/' and \
         request.env.has_key('HTTP_IF'):
             try:
-                meta = self.storageProvider.getMeta(request.path, user=user)
+                meta = self.storageProvider.getMeta(request.path, user=user, cache=request.env['cache'])
                 request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'])
                 request.setResponseCode(204)
                 return
@@ -529,7 +529,7 @@ class WebdavResource(GetPostResource):
             depth = 1
 
         try:
-            meta   = self.storageProvider.getMeta(request.path, depth, requestedProperties, user=request.env.get('user'))
+            meta   = self.storageProvider.getMeta(request.path, depth, requestedProperties, user=request.env.get('user'), cache=request.env['cache'])
         except (OSError, IOError), e:
             # Some User-Agents, like Konqueror want to have also response body
             request.writeDirect('<html><body><h1>Not Found</h1></body></html>', 404)
@@ -544,7 +544,7 @@ class WebdavResource(GetPostResource):
                     continue
 
                 try:
-                    resourceMeta = resource.storageProvider.getMeta(path, 0, requestedProperties, user=request.env.get('user'))
+                    resourceMeta = resource.storageProvider.getMeta(path, 0, requestedProperties, user=request.env.get('user'), cache=request.env['cache'])
                     meta[path+name] = resourceMeta[path]
                 except:
                     meta[path+name] = {
@@ -654,7 +654,7 @@ class WebdavResource(GetPostResource):
 
                         allProps[tag.tag] = 0
                         try:
-                            self.storageProvider.setMeta(request.path, {tag.tag: tag.text}, user=request.env.get('user'))
+                            self.storageProvider.setMeta(request.path, {tag.tag: tag.text}, user=request.env.get('user'), cache=request.env['cache'])
                         except Exception, ex:
                             logging.getLogger().error("setMeta: Got Exception: %s" % ex)
                             allProps[tag.tag] = 1
@@ -671,7 +671,7 @@ class WebdavResource(GetPostResource):
 
                         allProps[tag.tag] = 0
                         try:
-                            self.storageProvider.delMeta(request.path, [tag.tag], user=request.env.get('user'))
+                            self.storageProvider.delMeta(request.path, [tag.tag], user=request.env.get('user'), cache=request.env['cache'])
                         except:
                             allProps[tag.tag] = 1
 
@@ -714,7 +714,7 @@ class WebdavResource(GetPostResource):
             return request.setResponseCode(415)
 
         try:
-            meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+            meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
             isCollection = meta[request.path].get('{DAV:}resourcetype', 0)
             isCollection = bool(isCollection)
             if isCollection == False:
@@ -727,7 +727,7 @@ class WebdavResource(GetPostResource):
 
 
         try:
-            self.storageProvider.createCollection(request.path, user=request.env.get('user'))
+            self.storageProvider.createCollection(request.path, user=request.env.get('user'), cache=request.env['cache'])
         except EnvironmentError as e:
             logging.getLogger().warn("@todo: Handle delete exceptions from the storage provider %s" % e)
             if e.errno == storage.PRECONDITION_FAILED:
@@ -746,7 +746,7 @@ class WebdavResource(GetPostResource):
 
         meta = { request.path: {}}
         try:
-            meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+            meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
             request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'].encode('ascii'))
         except EnvironmentError as e:
             if e.errno == storage.NOT_FOUND:
@@ -756,9 +756,9 @@ class WebdavResource(GetPostResource):
             pass
         
         try:
-            availableBytes = self.storageProvider.getSize(request.path, -1, user=request.env.get('user'))
-            self.storageProvider.delete(request.path, user=request.env.get('user'))
-            self.storageProvider.delMeta(request.path, user=request.env.get('user'))
+            availableBytes = self.storageProvider.getSize(request.path, -1, user=request.env.get('user'), cache=request.env['cache'])
+            self.storageProvider.delete(request.path, user=request.env.get('user'), cache=request.env['cache'])
+            self.storageProvider.delMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
         except (OSError, IOError) as e:
             logging.getLogger().warn("@todo: Handle delete exceptions from the storage provider %s. Stack Trace: %s" % (e,traceback.format_exc()))
             if e.errno == 2:
@@ -989,7 +989,7 @@ class WebdavResource(GetPostResource):
         if request.env.has_key('HTTP_USER_AGENT') and \
         request.env['HTTP_USER-AGENT'].strip()[0:9]=='WebDAVFS/':
             try:
-                meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'))
+                meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
                 request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'])
             except:
                 pass
@@ -999,14 +999,14 @@ class WebdavResource(GetPostResource):
     def render_COPY(self, request):
         def callback(sourceUri, destResource, destPath, depth):
             logging.getLogger().debug("Executing Copy: %s %s" % (sourceUri, destPath))
-            self.storageProvider.copy(sourceUri, destPath, depth, user=request.env.get('user'))
+            self.storageProvider.copy(sourceUri, destPath, depth, user=request.env.get('user'), cache=request.env['cache'])
 
-            meta = self.storageProvider.getMeta(sourceUri, None, depth, user=request.env.get('user'))
+            meta = self.storageProvider.getMeta(sourceUri, None, depth, user=request.env.get('user'), cache=request.env['cache'])
             for path, data in meta.items():
                 path = path.replace(sourceUri, destPath)
-                destResource.storageProvider.setMeta(path, data, depth, user=request.env.get('user'))
+                destResource.storageProvider.setMeta(path, data, depth, user=request.env.get('user'), cache=request.env['cache'])
 
-            size = self.storageProvider.getSize(sourceUri, depth, user=request.env.get('user'))
+            size = self.storageProvider.getSize(sourceUri, depth, user=request.env.get('user'), cache=request.env['cache'])
             request.env.get('user').changeQuota(size)
 
         return self._handleCopyMove(request, callback)
@@ -1014,7 +1014,7 @@ class WebdavResource(GetPostResource):
     def render_MOVE(self, request):
 
         def callback(sourceUri, destResource, destPath, depth):
-            self.storageProvider.move(sourceUri, destPath, depth, user=request.env.get('user'))
+            self.storageProvider.move(sourceUri, destPath, depth, user=request.env.get('user'), cache=request.env['cache'])
 
         return self._handleCopyMove(request, callback)
 
@@ -1053,7 +1053,7 @@ class WebdavResource(GetPostResource):
             return
 
         targetExists = False
-        if request.env.get('HTTP_OVERWRITE') and destResource.storageProvider.exists(destPath, user=request.env.get('user')):
+        if request.env.get('HTTP_OVERWRITE') and destResource.storageProvider.exists(destPath, user=request.env.get('user'), cache=request.env['cache']):
             """
             If a resource exists at the destination and the Overwrite header is
             "T" then prior to performing the move the server MUST perform a
@@ -1068,7 +1068,7 @@ class WebdavResource(GetPostResource):
                 return
             elif request.env['HTTP_OVERWRITE'].strip().upper() == 'T':
                 try:
-                    destResource.storageProvider.delete(destPath, user=request.env.get('user'))
+                    destResource.storageProvider.delete(destPath, user=request.env.get('user'), cache=request.env['cache'])
                 except OSError, e:
                     # suppress any warnings at this stage
                     pass
@@ -1358,7 +1358,7 @@ class TokenWebdavResource(WebdavResource):
 	}
         """
         try:
-            stream = self.storageProvider.get("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']), user=request.env.get('user'))
+            stream = self.storageProvider.get("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']), user=request.env.get('user'), cache=request.env['cache'])
         except:
             return {}
 
@@ -1444,7 +1444,7 @@ class TokenWebdavResource(WebdavResource):
 
         # Post: make checks after the file is uploaded
         try:
-            meta = self.storageProvider.getMeta(request.path, 0, user=request.env.get('user'))
+            meta = self.storageProvider.getMeta(request.path, 0, user=request.env.get('user'), cache=request.env['cache'])
             meta[request.path]['{DAV:}getcontentlength']
             meta[request.path]['{DAV:}getcontenttype']
 

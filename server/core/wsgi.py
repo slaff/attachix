@@ -29,6 +29,7 @@ class Request(http.BaseRequest):
         self.__files = None
 
         self.env = env
+        self.env['cache'] = {} # per-request data cache
 
         # debug data
         logging.getLogger().debug("Method: [%s], URI: [%s], Query: [%s]" %
