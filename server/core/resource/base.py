@@ -987,7 +987,7 @@ class WebdavResource(GetPostResource):
 
         # Mac OS X Special Case
         if request.env.has_key('HTTP_USER_AGENT') and \
-        request.env['HTTP_USER-AGENT'].strip()[0:9]=='WebDAVFS/':
+        request.env['HTTP_USER_AGENT'].strip()[0:9]=='WebDAVFS/':
             try:
                 meta = self.storageProvider.getMeta(request.path, user=request.env.get('user'), cache=request.env['cache'])
                 request.setHeader('Content-Type', meta[request.path]['{DAV:}getcontenttype'])
