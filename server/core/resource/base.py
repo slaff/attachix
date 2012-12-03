@@ -971,7 +971,7 @@ class WebdavResource(GetPostResource):
             request.setResponseCode(400)
             return
         
-        m = re.match('<opaquelocktoken:(.*?)>', request.env['HTTP_LOCK-TOKEN'].strip())
+        m = re.match('<opaquelocktoken:(.*?)>', request.env['HTTP_LOCK_TOKEN'].strip())
         if m is None:
             request.setResponseCode(423)
             return

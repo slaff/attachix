@@ -14,7 +14,7 @@ class Request(http.BaseRequest):
 
     CHUNK_SIZE = 2 ** 14
 
-    def __init__(self, env, responseCallback):
+    def __init__(self, env, responseCallback, cache={}):
         self.version = env['SERVER_PROTOCOL']
         self.method  = env['REQUEST_METHOD']
         self.rawUri = quote(env['PATH_INFO'])
@@ -29,7 +29,7 @@ class Request(http.BaseRequest):
         self.__files = None
 
         self.env = env
-        self.env['cache'] = {} # per-request data cache
+        self.env['cache'] = cache # per-request data cache
 
         # debug data
         logging.getLogger().debug("Method: [%s], URI: [%s], Query: [%s]" %
