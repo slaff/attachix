@@ -50,7 +50,7 @@ class Secure():
 
 from http import normalizeUri
 class SecureLink():
-    def __init__(self, key, iv, chKey, skipPaths=None):
+    def __init__(self, key, iv, chKey, skipPaths=[]):
         self.cipher = Secure(key, iv)
         self.chKey  = chKey
         self.skipPaths = skipPaths
