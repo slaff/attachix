@@ -145,10 +145,15 @@ class StorageProvider():
         shutil.move(self._translateUri(sourceUri, **kwargs), self._translateUri(targetUri, **kwargs))
 
     def delete(self, uri, **kwargs):
-        if self.isCollection(uri, **kwargs):
-            shutil.rmtree(self._translateUri(uri, **kwargs))
-        else:
-            os.unlink(self._translateUri(uri, **kwargs))
+        try:
+            if self.isCollection(uri, **kwargs):
+                shutil.rmtree(self._translateUri(uri, **kwargs))
+            else:
+                os.unlink(self._translateUri(uri, **kwargs))
+        except OSError as ex:
+            if ex.errno == 2: # Not found
+                return None
+            raise ex
         
         # remove also the views directory
         try:
