@@ -679,7 +679,7 @@ class WebdavResource(GetPostResource):
         if getResponseType(request) == 'json':
             logging.getLogger().warn("@todo: return the response as json")
             request.setHeader('Content-Type', 'application/json')
-            responseBody = "%s" % {'remove': removedProps, 'set': setProps}
+            responseBody = "%s" % allProps
         else:
             request.setHeader('Content-Type', 'text/xml')
             rootEl = ET.Element("{DAV:}multistatus")           
