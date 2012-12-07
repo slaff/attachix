@@ -605,7 +605,7 @@ class WebdavResource(GetPostResource):
             postfix += '/'
         
         if getResponseType(request) == 'json':
-            request.setHeader('Content-Type', 'application/json')
+            request.setHeader('Content-Type', 'application/json; charset="utf-8"')
             jsonData = OrderedDict()
             for (path, data) in meta.items():
                 href = path.replace(request.path, postfix,1)
