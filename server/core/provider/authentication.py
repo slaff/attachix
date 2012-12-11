@@ -26,6 +26,12 @@ class AuthProvider():
         return True
 
     def authenticate(self, request):
+        if request.env.has_key('PROVIDER_AUTHENTICATED'):
+            if not self.getIdentity(request):
+                return False
+            return True
+        
+        request.env['PROVIDER_AUTHENTICATED']=1
         if self._doAuthenticate(request):
             return True
         else:
