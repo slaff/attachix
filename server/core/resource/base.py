@@ -62,8 +62,7 @@ class StaticResource(Resource):
     def render(self, request):
         # Authenticate the user first
         if self.authProvider and not request.env.has_key('user'):
-            if not self.authProvider.getIdentity(request) and \
-            not self.authProvider.authenticate(request):
+            if not self.authProvider.authenticate(request):
                 return
             request.env['user'] = self.authProvider.getUser(request)
         try:
