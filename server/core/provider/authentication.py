@@ -25,8 +25,15 @@ class AuthProvider():
         """
         return True
 
-    def authenticate(self, request):
-        if request.env.has_key('PROVIDER_AUTHENTICATED'):
+    def authenticate(self, request, force=False):
+        """
+        Tries to authenticate the user and stores his identity in the request.
+        @param Request request  request object
+        @param boolean force    specifies if the authentication must be repeated
+                                even in cases where this was already done
+        @return boolean
+        """
+        if not force and request.env.has_key('PROVIDER_AUTHENTICATED'):
             if not self.getIdentity(request):
                 return False
             return True
