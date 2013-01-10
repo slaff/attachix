@@ -5,7 +5,7 @@ import traceback
 import urlparse
 
 from core.http import getResponseType
-from core.root import Resource
+from core.resource import Resource
 
 """
 Resources that simulate the MvC pattern

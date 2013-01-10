@@ -27,8 +27,8 @@ from core.provider.locking import SCOPE_SHARED
 from core.provider.locking import TYPE_READ
 from core.provider.locking import TYPE_WRITE
 import core.provider.storage as storage
-from core.root import Resolver
-from core.root import Resource
+from core.resource import Resolver
+from core.resource import Resource
 from core.utils import OrderedDict
 from core.utils import baseName
 from core.utils import StreamRange

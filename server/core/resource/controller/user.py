@@ -8,7 +8,6 @@ import datetime
 from core.http import normalizeUri
 from core.coder import Secure
 from core.coder import SecureLink
-from core.root import Resolver
 import conf.server as config
 
 from django.core import mail

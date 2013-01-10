@@ -1,6 +1,6 @@
 import logging
 import os
-from root import Resolver
+from core.resource import Resolver
 import utils
 
 class Application():
