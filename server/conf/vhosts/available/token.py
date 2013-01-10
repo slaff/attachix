@@ -15,12 +15,8 @@ class VHost(default.VHost):
         """
         default.VHost.build(self)
 
-        root = resource.TokenWebdavResource(
-            self.root.storageProvider,
-            self.root.lockProvider,
-            notifier=notify.Manual([changes.Plugin()])
-        )
-        root.children = self.root.children
+        # [Change the notifiers] #
+        self.root.notifier = notify.Manual([changes.Plugin()])
 
         # plain propfind xslt replaces the other one
         xsltResource = resource.StaticResource(
@@ -28,17 +24,12 @@ class VHost(default.VHost):
                             expirationDays = 2
                           )
         xsltResource.isLeaf = True
-        root.children['~static'].putChild('propfind.xslt', xsltResource)
+        self.root.children['~static'].putChild('propfind.xslt', xsltResource)
+
+        tree = resource.TokenAccessResourceDecorator(self.root)
 
         self.root = resource.TokenResource(
                                 authProvider=authentication.TokenAuthProvider(secret=self.config['share']['secret'],
                                              userProvider=self.user
                                              ),
-                                tree=root)
-        # the default favourite
-        faviconResource = resource.StaticResource(
-                            storage.FileStorageProvider(self.config['basePath']+'/static/public/favicon.ico'),
-                            expirationDays = 2
-                          )
-        faviconResource.isLeaf = True
-        self.root.putChild('favicon.ico', faviconResource)
+                                tree=tree)

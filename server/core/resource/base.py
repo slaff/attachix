@@ -1313,7 +1313,7 @@ class TokenResource(Resource):
     def getChild(self, path, request):
         #if request.method == 'OPTIONS':
         #    return self.tree
-
+        
         try:
             if request.prepath[0][0] == '~':
                 return self.tree.getChildWithDefault(path, request)
@@ -1330,7 +1330,7 @@ class TokenResource(Resource):
 
         return self.tree
 
-class TokenWebdavResource(WebdavResource):
+class TokenAccessResourceDecorator(Decorator):
     """
     Resource that adds limitations based on the access token.
     The limitations can be
@@ -1358,7 +1358,7 @@ class TokenWebdavResource(WebdavResource):
 	}
         """
         try:
-            stream = self.storageProvider.get("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']), user=request.env.get('user'), cache=request.env['cache'])
+            stream = self._obj.storageProvider.get("%s/.%s.axs" % (request.env['auth']['path'], request.env['auth']['checksum']), user=request.env.get('user'), cache=request.env['cache'])
         except:
             return {}
 
@@ -1392,7 +1392,7 @@ class TokenWebdavResource(WebdavResource):
                                         request.env['auth']['settings']['auth'],
                                         False
                                                   )
-            if not authProvider.authenticate(request):
+            if not authProvider.authenticate(request,True):
                 return False
             request.env['auth']['user'] = authProvider.getIdentity(request)
         return True
@@ -1413,12 +1413,12 @@ class TokenWebdavResource(WebdavResource):
 
     def render(self, request):
         self._loadAccessRules(request)
-        return WebdavResource.render(self, request)
+        return self._obj.render(request)
 
 
     def render_GET(self, request):
         if self._checkAuth(request):
-           return WebdavResource.render_GET(self, request)
+           return self._obj.render_GET(request)
 
     def render_PUT(self, request):
         """
@@ -1429,7 +1429,7 @@ class TokenWebdavResource(WebdavResource):
             return
 
         if not len(request.env['auth']['settings']):
-            return WebdavResource.render_PUT(self, request)
+            return self._obj.render_PUT(request)
 
         # Pre: Make initial limitation based on the request headers
         try:
@@ -1440,11 +1440,11 @@ class TokenWebdavResource(WebdavResource):
             request.setResponseCode(412)
             return
 
-        result = WebdavResource.render_PUT(self, request)
+        result = self._obj.render_PUT(request)
 
         # Post: make checks after the file is uploaded
         try:
-            meta = self.storageProvider.getMeta(request.path, 0, user=request.env.get('user'), cache=request.env['cache'])
+            meta = self._obj.storageProvider.getMeta(request.path, 0, user=request.env.get('user'), cache=request.env['cache'])
             meta[request.path]['{DAV:}getcontentlength']
             meta[request.path]['{DAV:}getcontenttype']
 
@@ -1473,4 +1473,4 @@ class TokenWebdavResource(WebdavResource):
                     return
                 # @todo: check Mime Types + check File Size
 
-        return WebdavResource.render_POST(self, request)
+        return self._obj.render_POST(request)
