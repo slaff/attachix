@@ -8588,28 +8588,34 @@ files.mkcol(_51+"/"+_50["name"],function(){
 },".toolbar form.share submit":function(el,ev){
 ev.preventDefault();
 var _54=el.formParams();
+var _55=$(".selected-entry");
+var len=_55.length;
+if(len==1){
+_54["path"]=$(_55[0]).attr("name");
+}else{
 _54["path"]=this.currentPath==""?"/":this.currentPath;
-files.share(_54,function(_55){
+}
+files.share(_54,function(_57){
 alert("The share invitation was sent");
 },this._errorHandler);
 },".toolbar input.input-rename focus":function(el,ev){
-var _58=$(".selected-entry");
-var len=_58.length;
+var _5a=$(".selected-entry");
+var len=_5a.length;
 if(len==1){
-var _5a=$(_58[0]).attr("name");
-$(el).val(files.basename(_5a));
+var _5c=$(_5a[0]).attr("name");
+$(el).val(files.basename(_5c));
 }
 },".toolbar form.rename submit":function(el,ev){
 ev.preventDefault();
-var _5d=el.formParams();
-var _5e=$(".selected-entry");
-var len=_5e.length;
+var _5f=el.formParams();
+var _60=$(".selected-entry");
+var len=_60.length;
 if(len!=1){
 alert("Select only one entry for renaming!");
 }else{
-var _60=_5e[0];
-var _61=$(_60).attr("name");
-files.move(_61,_5d["name"],function(){
+var _62=_60[0];
+var _63=$(_62).attr("name");
+files.move(_63,_5f["name"],function(){
 },this._errorHandler);
 }
 },"li.entry mouseenter":function(el,ev){
@@ -8628,43 +8634,43 @@ $(el).removeClass("selected-entry");
 }
 },".toolbar form.delete submit":function(el,ev){
 ev.preventDefault();
-var _6c=$(".selected-entry");
-var len=_6c.length;
+var _6e=$(".selected-entry");
+var len=_6e.length;
 if(!len){
 alert("There are no items selected for deletion!");
 }else{
 if(confirm("Do you want to delete the selected entries?")){
 for(var i=0;i<len;i++){
-var _6f=_6c[i];
-var _70=$(_6f).attr("name");
-files.del(_70,this.callback(function(){
+var _71=_6e[i];
+var _72=$(_71).attr("name");
+files.del(_72,this.callback(function(){
 }),this._errorHandler);
 }
 }
 }
 },".toolbar form.upload submit":function(el,ev){
 $(el).attr("action",this.currentPath+"?_return=empty");
-},"changes.files subscribe":function(_73,_74){
+},"changes.files subscribe":function(_75,_76){
 if(!this.initialized||this.loading){
 return;
 }
-var _75=jQuery.parseJSON(_74);
-var _76=_75["files"];
-_76["resource"]=_76["resource"].replace(this.baseURI,"");
-if(this.currentPath!=files.dirname(_76["resource"])){
+var _77=jQuery.parseJSON(_76);
+var _78=_77["files"];
+_78["resource"]=_78["resource"].replace(this.baseURI,"");
+if(this.currentPath!=files.dirname(_78["resource"])){
 return;
 }
-var id=filesController.Helpers.pathToId(_76["resource"]);
+var id=filesController.Helpers.pathToId(_78["resource"]);
 var el=$("#"+id);
-if(_76["type"]=="remove"){
+if(_78["type"]=="remove"){
 el.remove();
 }else{
 if(el.length){
-el.html(this.view("entry",{baseURL:this.baseURL,file:_76["meta"],href:_76["resource"]}));
+el.html(this.view("entry",{baseURL:this.baseURL,file:_78["meta"],href:_78["resource"]}));
 }else{
-var _79={};
-_79[_76["resource"]]=_76["meta"];
-this.list(_79);
+var _7b={};
+_7b[_78["resource"]]=_78["meta"];
+this.list(_7b);
 }
 }
 }});

@@ -541,7 +541,18 @@ jQuery.Controller.extend('filesController',
     '.toolbar form.share submit' : function(el, ev) {
         ev.preventDefault();
         var params = el.formParams()
-        params['path'] = this.currentPath == '' ? '/' : this.currentPath
+        var selectedEntries = $('.selected-entry')
+        var len = selectedEntries.length;
+        if (len == 1) {
+            // check if there is one selected path
+            // if use it for share
+            params['path'] = $(selectedEntries[0]).attr('name')
+        }
+        else {
+            // otherwise share the current path
+            params['path'] = this.currentPath == '' ? '/' : this.currentPath
+        }
+
         files.share(params,
                     function (data) {
                       alert('The share invitation was sent')
