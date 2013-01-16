@@ -240,8 +240,17 @@ class BaseRequest(object):
     _responseCode  = 200
     _responseBody  = []
     _responseHeaders = []
+    env            = {}
+    __inputStream  = None
 
-    def __init__(self, uri):
+    def __init__(self, uri, env={}):
+        self.env    = env
+        self.method = 'GET'
+        if env.has_key('REQUEST_METHOD'):
+            self.method = env['REQUEST_METHOD']
+        self.__inputStream = None
+        if env.has_key('wsgi.input'):
+            self.__inputStream = env['wsgi.input']
         self.uri    = uri
         self.query  = ''
         if '?' in self.uri:
@@ -262,9 +271,8 @@ class BaseRequest(object):
         """
         Method that helps to use the BaseRequest class in
         a file-like manner.
-        Notice: Implement it in the child class
         """
-        pass
+        return self.__inputStream.read(bytes)
 
     def readline(self):
         """
@@ -272,7 +280,7 @@ class BaseRequest(object):
         a file-like manner.
         Notice: Implement it in the child class
         """
-        pass
+        return self.__inputStream.readline()
 
     def write(self, data):
         """
@@ -281,6 +289,10 @@ class BaseRequest(object):
         Notice: Implement it in the child class
         """
         pass
+
+    def writeDirect(self, data, code=None, message=None):
+        self._responseBody = data
+        self._responseCode = code
 
     def close(self):
         """
@@ -297,6 +309,12 @@ class BaseRequest(object):
             return []
         else:
             return self._responseBody
+
+    def setHeader(self, name, value):
+        """
+        Notice: Implement it in the child class
+        """
+        self._responseHeaders.append((name, value))
 
     def reset(self):
         """

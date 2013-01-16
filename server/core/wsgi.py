@@ -20,7 +20,7 @@ class Request(http.BaseRequest):
         self.rawUri = quote(env['PATH_INFO'])
         if env['QUERY_STRING']:
             self.rawUri +="?%s" % env['QUERY_STRING']
-        http.BaseRequest.__init__(self, self.rawUri)
+        http.BaseRequest.__init__(self, self.rawUri, env)
         self.query   = env['QUERY_STRING']
         self.__inputStream = env['wsgi.input']
         self.__responseCallback = responseCallback

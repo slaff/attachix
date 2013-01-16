@@ -47,6 +47,7 @@ ValueError: Strings for DES must be a multiple of 8 in length
 
     def testBase64(self):
         encodedText = self.cipher.encode(self.clearText, True)
+        self.assertEquals(0, len(encodedText) % 64)
         self.assertEquals(self.clearText, self.cipher.decode(encodedText, True))
 
     def tearDown(self):
