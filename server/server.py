@@ -53,12 +53,6 @@ def Dispatcher(env, start_response):
 
     return request.getResponseBody()
 
-# debug settings
-env = {
-   # 'wsgi.file_wrapper': wsgi.SendFileWrapper()
-}
-
-
 # [Create Servers] #
 servers = []
 serverLog = 'default'
@@ -74,7 +68,7 @@ for ip, ports in Application.vhosts.items():
                          backlog=config['backlog'],
                          keyfile=vhost.ssl['key'], certfile=vhost.ssl['cert'], log=serverLog)
             else:
-                server = wsgi.WSGIServer((ip, port), Dispatcher, environ=env,
+                server = wsgi.WSGIServer((ip, port), Dispatcher, environ={},
                          backlog=config['backlog'],log=serverLog)
             servers.append(server)
             logger.info('Serving on %s:%s ...' % (ip,port))
