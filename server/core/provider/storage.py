@@ -301,25 +301,30 @@ class CacheDecorator(Decorator):
         return meta
 
     def delMeta(self, uri, list=None, **kwargs):
-        self._obj.delMeta(uri, list, **kwargs)
+        result = self._obj.delMeta(uri, list, **kwargs)
         self.delCache(uri, **kwargs)
+        return result
 
     def setMeta(self, uri, hashes, depth=0, **kwargs):
-        self._obj.setMeta(uri, hashes, depth, **kwargs)
+        result = self._obj.setMeta(uri, hashes, depth, **kwargs)
         self.addCache(uri, **kwargs)
+        return result
 
     def create(self, uri, data, env=None, expectedSize=None, **kwargs):
-        self._obj.create(uri, data, env, expectedSize, **kwargs)
+        result = self._obj.create(uri, data, env, expectedSize, **kwargs)
         self.addCache(uri, **kwargs)
+        return result
 
     def createCollection(self, uri, **kwargs):
-        self._obj.createCollection(uri, **kwargs)
+        result = self._obj.createCollection(uri, **kwargs)
         self.addCache(uri, **kwargs)
+        return result
 
     def move(self, sourceUri, targetUri, depth=0, **kwargs):
-        self._obj.move(sourceUri, targetUri, depth, **kwargs)
+        result = self._obj.move(sourceUri, targetUri, depth, **kwargs)
         self.delCache(sourceUri, **kwargs)
         self.addCache(targetUri, **kwargs)
+        return result
 
     def addCache(self, uri, **kwargs):
         (key, field) = self.getCacheKey(uri, **kwargs)
