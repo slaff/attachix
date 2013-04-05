@@ -8849,14 +8849,17 @@ window.location.href="#open:"+files.basename(_2["url"]);
 include.setPath('controllers');
 jQuery.Controller.extend("imageController",{onDocument:true,Helpers:{}},{"open.image.* subscribe":function(_1,_2){
 var _3=$(_2).attr("href");
-var _4=files.basename(_3);
-var _5=files.dirname(_3);
-files.shareurl({"path":_3,"days":1,"permissions":"rw"},function(_6){
-if(_6["code"]=="success"){
-var _7="http://"+_6["body"];
-var _8=encodeURIComponent(_7);
-var _9="http://pixlr.com/express/?s=c&image="+_8+"&title="+_4+"&target="+_8+"&exit="+encodeURIComponent(_5);
-window.open(_9,"Pixlr Editor");
+var _4=window.location.protocol;
+var _5=files.basename(_3);
+var _6=_4+"://"+document.location.hostname+"/"+files.dirname(_3);
+files.shareurl({"path":_3,"days":1,"permissions":"rw"},function(_7){
+if(_7["code"]=="success"){
+var _8=_4+"://"+_7["body"];
+var _9=encodeURIComponent(_8);
+var _a=_4+"://"+files.dirname(_7["body"]);
+var _b="http://pixlr.com/express/?s=c&image="+_9+"&title="+_5+"&target="+encodeURIComponent(_a)+"&exit="+encodeURIComponent(_6)+"&referrer=Attachix&method=POST&redirect=false";
+$("#files-content").height(800);
+$("#files-content").html("<iframe style=\"width:100%;height:100%;\" frameborder=\"0\" src=\""+_b+"\" />");
 }
 });
 }});
