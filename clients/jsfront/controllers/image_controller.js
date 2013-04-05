@@ -26,14 +26,22 @@ jQuery.Controller.extend('imageController',
             },
             function(result) {
                 if(result['code']=='success') {
-                    var url = proto+"://"+result['body'];
-                    var encodedURL = encodeURIComponent(url);
-                    var target = proto+"://"+files.dirname(result['body'])
-                    var editorUrl = "http://pixlr.com/express/?s=c&image="+encodedURL+"&title="+name+"&target="+encodeURIComponent(target)+"&exit="+encodeURIComponent(folder)+"&referrer=Attachix&method=POST&redirect=false"
-                    // @see: http://pixlr.com/developer/api/
+                    files.shareurl({
+                        'path': files.dirname(href),
+                        'days': 1,
+                        'permissions': 'w'
+                    },
+                    function(data) {
+                        if(data['code']=='success') {
+                            var url = proto+"://"+result['body'];
+                            var target = proto+"://"+data['body']
+                            var editorUrl = "http://pixlr.com/express/?s=c&image="+url+"&title="+name+"&target="+target+"&exit="+encodeURIComponent(folder)+"&referrer=Attachix&method=POST&redirect=false"
+                            // @see: http://pixlr.com/developer/api/
 
-                    $('#files-content').height(800);
-                    $('#files-content').html('<iframe style="width:100%;height:100%;" frameborder="0" src="' + editorUrl + '" />')
+                            $('#files-content').height(800);
+                            $('#files-content').html('<iframe style="width:100%;height:100%;" frameborder="0" src="' + editorUrl + '" />')
+                        }
+                    });
                 }
             }
         );

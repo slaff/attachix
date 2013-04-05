@@ -109,6 +109,7 @@ class User():
         permissionMap['r']  = ['OPTIONS','GET','PROPFIND','HEAD']; # read
         permissionMap['rw'] = permissionMap['r'] + ['POST', 'PROPPATCH','PUT'] # read and write
         permissionMap['rwd']= permissionMap['rw'] + ['PROPPATCH','PUT','DELETE'] # read write and delete
+        permissionMap['w']  = ['LOCK','POST','PUT','UNLOCK']; # write only
 
         permission = 'r'
         if request.params.get('permission') and permissionMap.has_key(request.params['permission']):
@@ -123,6 +124,11 @@ class User():
                                                expiration=expiration
                                               )
         return {'body': tokenURL}
+
+    def post_saveimage(self, request):
+        user = self.getUser(request)
+
+
 
 
     def getUser(self, request):
