@@ -19,13 +19,14 @@
     ) {
         relation = 'text';
     }
+    var id = pathToId(href);
 %>
 <%= view('views/files/thumbnail', {'baseURL': baseURL, 'file': file, 'href': href}) %>
-<a <%= (relation?'rel="'+relation+'"':'') %>  mime="<%= file['{DAV:}getcontenttype'] %>" title="<%= file['{DAV:}displayname'] %>" <%= file['{DAV:}resourcetype']?'':'target="_blank"' %> href="<%= link %>" class="truncate <%= file['{DAV:}resourcetype']?'folder':'file' %>">
+<a id="entry-<%= id %>"<%= (relation?'rel="'+relation+'"':'') %>  mime="<%= file['{DAV:}getcontenttype'] %>" title="<%= file['{DAV:}displayname'] %>" <%= file['{DAV:}resourcetype']?'':'target="_blank"' %> href="<%= link %>" class="truncate <%= file['{DAV:}resourcetype']?'folder':'file' %>">
 <%= file['{DAV:}displayname'] %>
 </a>
 <% if(!file['{DAV:}resourcetype']) { %>
 <br>
 [<%= bytesConvert(file['{DAV:}getcontentlength']) %>]
 <% } %>
-<input type="checkbox" name="<%= link %>" class="file-checkbox" id="chk-<%= pathToId(href) %>">
+<input type="checkbox" name="<%= link %>" class="file-checkbox" id="chk-<%= id %>">

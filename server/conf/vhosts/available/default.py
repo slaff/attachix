@@ -60,6 +60,14 @@ class VHost(vhost.VHost):
         faviconResource.isLeaf = True
         root.putChild('favicon.ico', faviconResource)
 
+
+        crossdomainResource = resource.StaticResource(
+                            storage.FileStorageProvider(self.config['basePath']+'/static/public/crossdomain.xml'),
+                            expirationDays= 2
+                          )
+        crossdomainResource.isLeaf = True
+        root.putChild('crossdomain.xml', crossdomainResource)
+
         # the help resource
         root.putChild('~help',
             resource.LimitedResourceDecorator(

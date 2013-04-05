@@ -430,14 +430,6 @@ jQuery.Controller.extend('filesController',
     },
     
     /**
-     * Creates and places the edit interface.
-     * @param {jQuery} el The files's edit link element.
-     */
-    '.edit click' : function(el){
-        var files = el.parents().model();
-        $( "."+files.identity() ).html(this.view('edit', files))
-    },
-    /**
      * Removes the edit interface.
      * @param {jQuery} el The files's cancel link element.
      */
@@ -641,6 +633,23 @@ jQuery.Controller.extend('filesController',
 
     '.toolbar form.upload submit' : function(el, ev) {
         $(el).attr('action', this.currentPath + '?_return=empty');
+    },
+
+    '.toolbar a.edit click' : function(el, ev) {
+        ev.preventDefault();
+        var selectedEntries = $('.selected-entry')
+        var len = selectedEntries.length;
+        if (len!=1) {
+            alert('You must select only one item for editing!');
+            return;
+        }
+
+        var checkId = $(selectedEntries[0]).attr('id');
+        var entryId = 'entry-'+checkId.replace('chk-','')
+
+        var entry = $('#'+entryId);
+        var mime  = $(entry).attr('mime');
+        OpenAjax.hub.publish("open."+mime.replace('/','.'), entry);
     },
 
     'changes.files subscribe': function (event, data) {

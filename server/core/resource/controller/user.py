@@ -92,6 +92,38 @@ class User():
 
         return {'body': 'Share invitation was send successfully.'}
 
+    def post_Shareurl(self, request):
+        """
+        Returns a url from where the resources can be read and written from other users
+        """
+        user = self.getUser(request)
+        shareConfig = config.Config['share']
+
+        path = request.params['path']
+        path = re.sub(r'/{2,}', '/', path)
+        expiration      = shareConfig['expiration']
+        if request.params.get('days'):
+            expiration = 86400 * int(request.params['days'])
+
+        permissionMap = {}
+        permissionMap['r']  = ['OPTIONS','GET','PROPFIND','HEAD']; # read
+        permissionMap['rw'] = permissionMap['r'] + ['POST', 'PROPPATCH','PUT'] # read and write
+        permissionMap['rwd']= permissionMap['rw'] + ['PROPPATCH','PUT','DELETE'] # read write and delete
+
+        permission = 'r'
+        if request.params.get('permission') and permissionMap.has_key(request.params['permission']):
+            permission = request.params['permission']
+
+        cipher = SecureLink(**shareConfig['secret'])
+        tokenURL = shareConfig['host'] + '/' + cipher.encode(permissionMap[permission],
+                                               user.getIdentity(),
+                                               path,
+                                               shareConfig['prefixes'],
+                                               255,
+                                               expiration=expiration
+                                              )
+        return {'body': tokenURL}
+
 
     def getUser(self, request):
         if request.env.has_key('user'):

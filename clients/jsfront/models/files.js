@@ -108,6 +108,18 @@ $.Model.extend('files',
         })
     },
 
+    shareurl :  function(attrs ,success, error) {
+        $.ajax({
+            url: '/-rest/user/shareurl',
+            data: attrs,
+            type: 'POST',
+            jsonp: 'cb',
+            dataType: 'jsonp',
+            success: success,
+	    error: error
+        })
+    },
+
     mkcol : function(uri ,success, error) {
         var self = this
         $.ajax({

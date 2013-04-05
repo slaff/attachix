@@ -14,33 +14,24 @@ jQuery.Controller.extend('imageController',
 },
 /* @Prototype */
 {
-    'open.image subscribe': function (event, data) {
-        this.data = data
-        if (!$('#image').length) {
-            $('#files-content').html($(document.createElement('div')).attr('id','image'))
-            Loader.script('http://feather.aviary.com/js/feather.js', this.callback('launch'));
-        }
-        else {
-            this.launch()
-        }
-    },
-
-    'launch': function() {
-        var featherEditor = new Aviary.Feather({
-            apiKey: 'cd0c0335e',
-            apiVersion: 2,
-            tools: 'all',
-            appendTo: 'image',
-            onSave: function(imageID, newURL) {
-                var img = document.getElementById(imageID);
-                img.src = newURL;
+    'open.image.* subscribe': function (event, entry) {
+        var href= $(entry).attr('href');
+        var name = files.basename(href);
+        var folder = files.dirname(href);
+        files.shareurl({
+                'path': href,
+                'days': 1,
+                'permissions': 'rw'
             },
-            postUrl: this.data['url']
-        });
-
-        featherEditor.launch({
-                image: this.data['id'],
-                url: this.data['url']
-        });
+            function(result) {
+                if(result['code']=='success') {
+                    var url = 'http://'+result['body'];
+                    var encodedURL = encodeURIComponent(url);
+                    var editorUrl = "http://pixlr.com/express/?s=c&image="+encodedURL+"&title="+name+"&target="+encodedURL+"&exit="+encodeURIComponent(folder)
+                    // @see: http://pixlr.com/developer/api/
+                    window.open(editorUrl,'Pixlr Editor');
+                }
+            }
+        );
     }
 });

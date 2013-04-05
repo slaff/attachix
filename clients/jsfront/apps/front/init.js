@@ -32,7 +32,8 @@ include(function(){ //runs after prior includes are loaded
                 'events',
                 'pdf',
                 'editor',
-                'content'
+                'content',
+                'image'
   );
   include.views(
             'views/files/init',
