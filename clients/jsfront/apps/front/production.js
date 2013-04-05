@@ -8851,14 +8851,14 @@ jQuery.Controller.extend("imageController",{onDocument:true,Helpers:{}},{"open.i
 var _3=$(_2).attr("href");
 var _4=window.location.protocol;
 var _5=files.basename(_3);
-var _6=_4+"://"+document.location.hostname+"/"+files.dirname(_3);
-files.shareurl({"path":_3,"days":1,"permissions":"rw"},function(_7){
+var _6=_4+"//"+document.location.hostname+"/"+files.dirname(_3);
+files.shareurl({"path":_3,"days":1,"permission":"rw"},function(_7){
 if(_7["code"]=="success"){
-files.shareurl({"path":files.dirname(_3),"days":1,"permissions":"w"},function(_8){
+files.shareurl({"path":files.dirname(_3),"days":1,"permission":"w"},function(_8){
 if(_8["code"]=="success"){
-var _9=_4+"://"+_7["body"];
-var _a=_4+"://"+_8["body"];
-var _b="http://pixlr.com/express/?s=c&image="+_9+"&title="+_5+"&target="+_a+"&exit="+encodeURIComponent(_6)+"&referrer=Attachix&method=POST&redirect=false";
+var _9=_4+"//"+_7["body"];
+var _a=_4+"//"+_8["body"];
+var _b="http://pixlr.com/express/?s=c&image="+encodeURIComponent(_9)+"&title="+_5+"&target="+encodeURIComponent(_a)+"&exit="+encodeURIComponent(_6)+"&referrer=Attachix&method=POST&redirect=false";
 $("#files-content").height(800);
 $("#files-content").html("<iframe style=\"width:100%;height:100%;\" frameborder=\"0\" src=\""+_b+"\" />");
 }

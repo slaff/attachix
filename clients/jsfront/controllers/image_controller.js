@@ -18,24 +18,24 @@ jQuery.Controller.extend('imageController',
         var href= $(entry).attr('href');
         var proto = window.location.protocol;
         var name = files.basename(href);
-        var folder = proto+"://"+document.location.hostname + "/"+files.dirname(href);
+        var folder = proto+"//"+document.location.hostname + "/"+files.dirname(href);
         files.shareurl({
                 'path': href,
                 'days': 1,
-                'permissions': 'rw'
+                'permission': 'rw'
             },
             function(result) {
                 if(result['code']=='success') {
                     files.shareurl({
                         'path': files.dirname(href),
                         'days': 1,
-                        'permissions': 'w'
+                        'permission': 'w'
                     },
                     function(data) {
                         if(data['code']=='success') {
-                            var url = proto+"://"+result['body'];
-                            var target = proto+"://"+data['body']
-                            var editorUrl = "http://pixlr.com/express/?s=c&image="+url+"&title="+name+"&target="+target+"&exit="+encodeURIComponent(folder)+"&referrer=Attachix&method=POST&redirect=false"
+                            var url = proto+"//"+result['body'];
+                            var target = proto+"//"+data['body']
+                            var editorUrl = "http://pixlr.com/express/?s=c&image="+encodeURIComponent(url)+"&title="+name+"&target="+encodeURIComponent(target)+"&exit="+encodeURIComponent(folder)+"&referrer=Attachix&method=POST&redirect=false"
                             // @see: http://pixlr.com/developer/api/
 
                             $('#files-content').height(800);
