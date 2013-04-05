@@ -26,6 +26,11 @@ class VHost(default.VHost):
         xsltResource.isLeaf = True
         self.root.children['~static'].putChild('propfind.xslt', xsltResource)
 
+        leaves = {}
+        for path, child in self.root.children.items():
+            if child.isLeaf == True:
+                leaves[path] = child
+
         tree = resource.TokenAccessResourceDecorator(self.root)
 
         self.root = resource.TokenResource(
@@ -33,3 +38,6 @@ class VHost(default.VHost):
                                              userProvider=self.user
                                              ),
                                 tree=tree)
+
+        for path, child in leaves.items():
+            self.root.putChild(path, child)
