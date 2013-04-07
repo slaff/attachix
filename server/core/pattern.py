@@ -437,3 +437,9 @@ class Decorator(object):
         # remove references to the object - if this is not done
         # they most certainly will not be cleaned
         object.__delattr__(self, '_obj')
+
+    def getOriginal(self):
+        """
+        Returns the original object that is decorated
+        """
+        return self._obj

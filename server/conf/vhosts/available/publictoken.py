@@ -12,7 +12,8 @@ class VHost(token.VHost):
         token.VHost.build(self)
 
         # [Change the notifiers] #
+        root = self.root.tree.getOriginal()
         if self.config.has_key('notificationPluginDirs'):
-            self.root.tree.notifier = notify.Enabled(self.config['notificationPluginDirs'])
+            root.notifier = notify.Enabled(self.config['notificationPluginDirs'])
         else:
-            self.root.tree.notifier = notify.Enabled()
+            root.notifier = notify.Enabled()
