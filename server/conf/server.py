@@ -39,6 +39,7 @@ Config = {
     # Default Server Share values
     'share': {
         'host': 'localhost:8888',
+        'public_host': 'localhost:8181',
         'methods': ['GET','PROPFIND','OPTIONS'],
         'prefixes': ['.views'],
         'depth': 255,

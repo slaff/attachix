@@ -116,7 +116,7 @@ class User():
             permission = request.params['permission']
 
         cipher = SecureLink(**shareConfig['secret'])
-        tokenURL = shareConfig['host'] + '/' + cipher.encode(permissionMap[permission],
+        tokenURL = shareConfig['public_host'] + '/' + cipher.encode(permissionMap[permission],
                                                user.getIdentity(),
                                                path,
                                                shareConfig['prefixes'],
@@ -124,12 +124,6 @@ class User():
                                                expiration=expiration
                                               )
         return {'body': tokenURL}
-
-    def post_saveimage(self, request):
-        user = self.getUser(request)
-
-
-
 
     def getUser(self, request):
         if request.env.has_key('user'):
