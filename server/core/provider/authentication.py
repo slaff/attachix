@@ -361,7 +361,7 @@ class DigestAuthProvider(AuthProvider):
     def getRawURI(self, request):
         if request.env.has_key('PATH_RAW'):
             return request.env['PATH_RAW']
-        return request.rawUri
+        return request.rawUri.replace('%7E','~')
 
     def getErrorResponse(self, request):
         body = AuthProvider.getErrorResponse(self, request)[2]
