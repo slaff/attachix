@@ -6,6 +6,7 @@ import logging
 from core.provider.authentications.backend import AbstractBackend
 
 from authentications.backend import MD5_HASH, CLEAR_TEXT
+from urllib import unquote
 
 class AuthProvider():
     request  = None
@@ -222,6 +223,7 @@ class DigestAuthProvider(AuthProvider):
         # If the "qop" directive's value is "auth" or is unspecified, then A2 is:
         # A2 = Method ":" digest-uri-value
         #return request.method + ":" + request.rawUri
+        print "URL: %s, RAW URL: %s" % (request.uri, self.getRawURI(request)) 
         return request.method + ":" + self.getRawURI(request)
         # Not implemented
         # If the "qop" value is "auth-int", then A2 is:
@@ -359,9 +361,16 @@ class DigestAuthProvider(AuthProvider):
             return self._returnTuple(401)
 
     def getRawURI(self, request):
-        if request.env.has_key('PATH_RAW'):
-            return request.env['PATH_RAW']
-        return request.rawUri.replace('%7E','~')
+        """
+        Function that tries to guess the original URI
+        """
+        suggestion = request.env['__DIGEST_PARAMS__']['uri']
+        current    = request.env['PATH_INFO']
+        if request.env['QUERY_STRING']:
+            current    +='?'+request.env['QUERY_STRING']
+        if unquote(suggestion) == unquote(current):
+            return suggestion
+        return current
 
     def getErrorResponse(self, request):
         body = AuthProvider.getErrorResponse(self, request)[2]
