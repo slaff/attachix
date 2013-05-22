@@ -364,6 +364,8 @@ class DigestAuthProvider(AuthProvider):
         """
         Function that tries to guess the original URI
         """
+        if request.env.has_key('RAW_URI'):
+            return request.env['RAW_URI']
         suggestion = request.env['__DIGEST_PARAMS__']['uri']
         current    = request.env['PATH_INFO']
         if request.env['QUERY_STRING']:

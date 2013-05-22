@@ -3,13 +3,15 @@
 import gevent
 import gevent.pool
 from gevent import monkey; monkey.patch_all()
-from gevent import pywsgi as wsgi
+#from gevent import pywsgi as wsgi
 import os
 import sys
 import signal
 basePath = os.path.dirname( os.path.realpath( __file__ ) )
 libPath = basePath+'/lib'
 sys.path.insert(1,libPath)
+
+import raw_wsgi as wsgi
 
 from core.application import Application
 from core.wsgi import Request
