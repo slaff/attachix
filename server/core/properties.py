@@ -56,6 +56,8 @@ def addXmlProp(propEl, key, value):
     elif type(value) == list:
         formatArrayValue(prop, key, value)
     else:
+        if type(value) is str:
+            value = value.decode('UTF-8')
         prop.text = "%s" % value
 
 # built-in formatters for XML PROPFIND response
