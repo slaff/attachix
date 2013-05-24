@@ -223,7 +223,6 @@ class DigestAuthProvider(AuthProvider):
         # If the "qop" directive's value is "auth" or is unspecified, then A2 is:
         # A2 = Method ":" digest-uri-value
         #return request.method + ":" + request.rawUri
-        print "URL: %s, RAW URL: %s" % (request.uri, self.getRawURI(request)) 
         return request.method + ":" + self.getRawURI(request)
         # Not implemented
         # If the "qop" value is "auth-int", then A2 is:
