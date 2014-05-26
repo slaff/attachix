@@ -14,7 +14,9 @@ def getMime(filename):
     if line is not None:
         parts = line.split(';')
         mime = parts[0].strip()
-        if mime == 'text/html' and \
+        if mime.find('/')==-1:
+            mime = 'application/octet-stream'
+        elif mime == 'text/html' and \
            (filename[-5:].lower() == '.xslt' or filename[-4:].lower() == '.xsl'):
             # @notice: workaround for the broken mime detection on debian
             # @todo: fix the real problem and remove this code
