@@ -14,7 +14,9 @@ class Request(http.BaseRequest):
 
     CHUNK_SIZE = 2 ** 14
 
-    def __init__(self, env, responseCallback, cache={}):
+    def __init__(self, env, responseCallback, cache=None):
+        if cache is None:
+            cache = {}
         self.version = env['SERVER_PROTOCOL']
         self.method  = env['REQUEST_METHOD']
         self.rawUri = quote(env['PATH_INFO'])

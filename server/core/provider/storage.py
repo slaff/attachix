@@ -16,7 +16,9 @@ class StorageProvider():
     CHUNK_SIZE = 16384 # 16KB buffer
     propertyProvider = None # Properties Provider
     
-    def __init__(self, path, propertyProvider=property.Base()):
+    def __init__(self, path, propertyProvider=None):
+        if propertyProvider is None:
+            propertyProvider = property.Base()
         self.path = path
         self.propertyProvider = propertyProvider
 
@@ -213,7 +215,9 @@ class StorageProvider():
 
 class UserStorageProvider(StorageProvider):
 
-    def __init__(self, path, propertyProvider=property.Base(), nestedLevel=0, createIfNonExistent=False):
+    def __init__(self, path, propertyProvider=None, nestedLevel=0, createIfNonExistent=False):
+        if propertyProvider is None:
+            propertyProvider = property.Base()
         self.nestedLevel = nestedLevel
         self.createIfNonExistent = createIfNonExistent
         StorageProvider.__init__(self,path,propertyProvider)

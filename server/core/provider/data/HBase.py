@@ -34,7 +34,7 @@ class ActiveRecord(base.ActiveRecord):
 
         return True
 
-    def findRange(self, startRow, stopRow, columns=[]):
+    def findRange(self, startRow, stopRow, columns=None):
         """
         Finds list of elements that start with startWith key and and with the endWith key
         Notice: Implement this method in the child class.
@@ -44,6 +44,8 @@ class ActiveRecord(base.ActiveRecord):
         @param list columns
         @return list
         """
+        if columns is None:
+            columns = []
         scanner = self.client.scannerOpenWithStop(self._table, startRow, stopRow, columns)
         items = []
         while True:

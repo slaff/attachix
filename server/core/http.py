@@ -243,7 +243,9 @@ class BaseRequest(object):
     env            = {}
     __inputStream  = None
 
-    def __init__(self, uri, env={}):
+    def __init__(self, uri, env=None):
+        if env is None:
+            env={}
         self.env    = env
         self.method = 'GET'
         if env.has_key('REQUEST_METHOD'):

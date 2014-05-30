@@ -50,12 +50,16 @@ class Secure():
 
 from http import normalizeUri
 class SecureLink():
-    def __init__(self, key, iv, chKey, skipPaths=[]):
+    def __init__(self, key, iv, chKey, skipPaths=None):
+        if skipPaths is None:
+            skipPaths = []
         self.cipher = Secure(key, iv)
         self.chKey  = chKey
         self.skipPaths = skipPaths
 
-    def encode(self, methods, userId, path, prefixes=[], depth=0, expiration=3600):
+    def encode(self, methods, userId, path, prefixes=None, depth=0, expiration=3600):
+        if prefixes is None:
+            prefixes = []
         finalTime = time.time() + expiration
 
         path = normalizeUri(path)
