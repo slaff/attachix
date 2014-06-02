@@ -2,7 +2,7 @@ import time
 import logging
 import select
 import gevent.queue as queue
-from gevent.coros import RLock
+from gevent.lock import RLock
         
 class ConnectionWrapper(object):
     """ConnectionWrapper """
