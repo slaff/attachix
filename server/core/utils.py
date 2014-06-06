@@ -315,3 +315,21 @@ def getMD5(stream):
         # @notice: possible non-blocking func will require one sleep with 0 seconds
         gevent.sleep(0.00)
     return md5Sum
+
+
+class FileIterator():
+    meta = None
+
+    def __init__(self, fileObject, chunk=1024*10, method="read"):
+        self.chunk = chunk
+        self.method = getattr(fileObject,method)
+        self.meta = {}
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        data = self.method(self.chunk)
+        if not data:
+            raise StopIteration
+        return data

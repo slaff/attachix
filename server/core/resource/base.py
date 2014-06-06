@@ -111,6 +111,10 @@ class StaticResource(Resource):
                 request.writeDirect('<h1>Forbidden</h1>',403)
             return
 
+        streamMeta = {}
+        if hasattr(stream, 'meta'):
+            streamMeta = stream.meta
+
         if meta[request.path].has_key('{DAV:}getetag'):
             if request.env.has_key('HTTP_IF_NONE_MATCH'):
                 # @see: http://en.wikipedia.org/wiki/HTTP_ETag
@@ -149,8 +153,10 @@ class StaticResource(Resource):
                               time.strftime('%a, %d %m %Y %H:%M:%S',
                               time.gmtime(meta[request.path]['{DAV:}getlastmodified']+self.expirationDays*86400)) + ' GMT')
 
-        if meta[request.path].get('{DAV:}getcontenttype'):
-            meta[request.path]['{DAV:}getcontenttype'] = fixMimeType(request.path, meta[request.path]['{DAV:}getcontenttype']);
+        if streamMeta.has_key('content-type'):
+            request.setHeader('Content-Type', "%s" % streamMeta['content-type'])
+        elif meta[request.path].get('{DAV:}getcontenttype'):
+            meta[request.path]['{DAV:}getcontenttype'] = fixMimeType(request.path, meta[request.path]['{DAV:}getcontenttype'])
             contentType = meta[request.path]['{DAV:}getcontenttype']
             if meta[request.path].has_key('{DAV:}encoding') and \
             meta[request.path]['{DAV:}encoding'] != 'binary':
@@ -160,15 +166,22 @@ class StaticResource(Resource):
         if self.contentDisposition:
             request.setHeader('Content-Disposition', '%s' % self.contentDisposition)
 
-        # start processing ranges
         length = None
-        if meta[request.path].get('{DAV:}getcontentlength'):
+        if streamMeta.has_key('content-encoding'):
+            request.setHeader('Content-Encoding', '%s' % streamMeta['content-encoding'])
+        elif streamMeta.has_key('content-length'):
             try:
-                length = int(meta[request.path]['{DAV:}getcontentlength'])
+                length = int(streamMeta['content-length'])
             except:
                 pass
 
-        if length and request.env.get('HTTP_RANGE'):
+            if length is None and meta[request.path].get('{DAV:}getcontentlength'):
+                try:
+                    length = int(meta[request.path]['{DAV:}getcontentlength'])
+                except:
+                    pass
+
+        if length is not None and request.env.get('HTTP_RANGE'):
             # process the range headers
             ranges = []
             try:
