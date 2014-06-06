@@ -8,8 +8,9 @@ class VHost():
     root = None
     env  = {}
     ssl  = {
-        'key': None,
-        'cert' : None
+        # If you want to serve the requests via SSL put here
+        # keyfile = 'location/to/key/file',
+        # certfile = 'location/to/cert/file'
     }
     config = None,
     timeouts  = {

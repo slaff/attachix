@@ -5,8 +5,8 @@ import conf.vhosts.available.default as default
 class VHost(default.VHost):
     port = 8443
     ssl  = {
-        'key': 'conf/ssl/moore.io.key',
-        'cert': 'conf/ssl/moore.io.pem'
+        'keyfile': 'conf/ssl/moore.io.key',
+        'certfile': 'conf/ssl/moore.io.pem'
     }
 
     def load(self):

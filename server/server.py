@@ -64,14 +64,9 @@ for ip, ports in Application.vhosts.items():
     for port, vhosts in ports.items():
         port = int(port)
         for vhost in vhosts:
-            if vhost.ssl['key']:
-                # no sendfile for SSL connections... sigh :(
-                server = wsgi.WSGIServer((ip, port), Dispatcher, environ={},
-                         backlog=config['backlog'],
-                         keyfile=vhost.ssl['key'], certfile=vhost.ssl['cert'], log=serverLog)
-            else:
-                server = wsgi.WSGIServer((ip, port), Dispatcher, environ={},
-                         backlog=config['backlog'],log=serverLog)
+            server = wsgi.WSGIServer((ip, port), Dispatcher, environ={},
+                     backlog=config['backlog'],
+                     log=serverLog, **vhost.ssl)
             servers.append(server)
             logger.info('Serving on %s:%s ...' % (ip,port))
 
