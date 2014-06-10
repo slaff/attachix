@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="css/mobile.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery.validate.password.css" />
-    <link rel="stylesheet" type="text/css" href="css/jquery.colorbox.css" />
+    <link rel="stylesheet" type="text/css" href="css/gallery.min.css" />
 </head>
 <body>
     <div class="header" id="top">
@@ -41,9 +41,20 @@
             </ul>
         </div>
 
+        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+
         <div id="footer">
             <a href="#top" class="backTop">Top</a>
-            ©2011 Attachix.De. All rights reserved
+            ©2014 Attachix. All rights reserved
         </div>
     </div>
     <div class="gut">

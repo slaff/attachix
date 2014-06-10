@@ -1,5 +1,6 @@
 include.resources(
-        'loader'
+        'loader',
+        'gallery.min'
 );
 include.engines();
 include.plugins(

@@ -343,14 +343,12 @@ jQuery.Controller.extend('filesController',
                                              });
         });
 
-        $("a[rel='image']").colorbox({
-                                        slideshow: false,
-                                        loop: false,
-                                        onEnd: function() {
-                                            // load on demand the next set of entries
-                                            self._scrollDown()
-                                        }
-                                     });
+
+        $("a[rel='image']").click(function(event) {
+            event.preventDefault();
+            var options = {index: this };
+            blueimp.Gallery($("a[rel='image']"), options);
+        });
 
         $("a.folder").filedrop(this.filedropOptions);
     },
