@@ -18,7 +18,7 @@ jQuery.Controller.extend('contentController',
         $('#files-list').removeClass('focus').addClass('blur')
         $('#files-content').removeClass('blur').addClass('focus')
 
-        $('#files .breadcrumb').html(this.view('../views/files/breadcrumb', {currentPath: data['url']}));
+        $('#files .breadcrumb').replaceWith(this.view('../views/files/breadcrumb', {currentPath: data['url']}));
         window.location.href = "#open:"+files.basename(data['url'])
     }
 });

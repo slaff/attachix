@@ -261,7 +261,7 @@ jQuery.Controller.extend('filesController',
     },
 
     _resetList: function() {
-        $('#files .breadcrumb').html(this.view('breadcrumb', {currentPath: this.currentPath}))
+        $('#files .breadcrumb').replaceWith(this.view('breadcrumb', {currentPath: this.currentPath}))
         $('#files ul.entries').html('')
         this.scroll = true
         this.page = 0
