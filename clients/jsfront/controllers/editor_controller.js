@@ -18,9 +18,13 @@ jQuery.Controller.extend('editorController',
     aceUrl: "/~js/resources/ace/production.js",
     url: null,
     fileName: null,
+    data: null,
 
-    'open.editor subscribe': function (event, data) {
-         this.data = data
+    'open.text.* subscribe': function (event, data) {
+         this.data = {
+             url: $(data).attr('href'),
+             mime: $(data).attr('mime')
+         }
          if (!$('#editor').length) {
             $('#files-content').html(
                 $(document.createElement('div')).attr('id','editor')

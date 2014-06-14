@@ -61,6 +61,19 @@ jQuery.Controller.extend('filesController',
         }
 
         this.initialized = true;
+
+        var controlsTop = 100;
+        $(window).scroll(function(event) {
+            var top = controlsTop - $(window).scrollTop()
+            var breadcrumb = $('div.breadcrumb')
+            if (top <= 0) {
+                breadcrumb.addClass('sticky');
+            }
+            else {
+                breadcrumb.removeClass('sticky');
+            }
+        });
+
         if (location.search) {
             // check if there is baseURL option, and if yes use it
             jQuery.query.load(window.location.href);
@@ -338,15 +351,16 @@ jQuery.Controller.extend('filesController',
             event.preventDefault();
 
             var el = $(event.currentTarget)
-            OpenAjax.hub.publish('open.editor', { url: el.attr('href'),
-                                                 mime: el.attr('mime')
-                                             });
+            OpenAjax.hub.publish('open.text', this);
         });
 
 
         $("a[rel='image']").click(function(event) {
             event.preventDefault();
-            var options = {index: this };
+            var options = {
+                fullScreen: true,
+                index: this
+            };
             blueimp.Gallery($("a[rel='image']"), options);
         });
 

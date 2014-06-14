@@ -15,10 +15,13 @@ jQuery.Controller.extend('contentController',
 /* @Prototype */
 {
     'open.** subscribe': function (event, data) {
+        var path = $(data).attr('href');
         $('#files-list').removeClass('focus').addClass('blur')
         $('#files-content').removeClass('blur').addClass('focus')
 
-        $('#files .breadcrumb').replaceWith(this.view('../views/files/breadcrumb', {currentPath: data['url']}));
-        window.location.href = "#open:"+files.basename(data['url'])
+        if(path != '') {
+            $('#files .breadcrumb').replaceWith(this.view('../views/files/breadcrumb', {currentPath: path}));
+            window.location.href = "#open:"+files.basename(path)
+        }
     }
 });

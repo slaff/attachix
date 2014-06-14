@@ -19,7 +19,7 @@ jQuery.Controller.extend('pdfController',
 
     pdfFolder: '/~js/resources/pdf',
 
-    'open.pdf subscribe': function (event, data) {
+    'open.pdf.* subscribe': function (event, data) {
         this.data = data
         if (!$('#pdf').length) {
             $('#files-content').html($(document.createElement('div')).attr('id','pdf'))
